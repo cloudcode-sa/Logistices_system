@@ -1,0 +1,487 @@
+/* Navigation Styles */
+.nav-link {
+  @apply text-gray-700 hover:text-primary-blue font-medium transition-colors duration-300 relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #0066CC;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Smooth Scrolling Offset for Fixed Nav */
+section {
+  scroll-margin-top: 80px;
+}
+
+/* RTL Support */
+[dir="rtl"] .space-x-8 > * + * {
+  margin-left: 0;
+  margin-right: 2rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+/* Hero Section Animations */
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Card Hover Effects */
+.service-card {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Form Input Focus */
+input:focus,
+textarea:focus {
+  border-color: #0066CC;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Button Ripple Effect */
+button {
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.testimonial-card:hover::before {
+  left: 100%;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #0066CC 0%, #004C99 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0066CC;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004C99;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .nav-link::after {
+    display: none;
+  }
+  
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  h2 {
+    font-size: 2rem !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  nav,
+  footer {
+    display: none;
+  }
+}
+
+/* Enhanced 3D Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rotate3d {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 3D Card Effects */
+.service-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.service-card:hover {
+  transform: translateY(-15px) rotateX(5deg) scale(1.03);
+  box-shadow: 0 25px 50px rgba(0, 102, 204, 0.3);
+}
+
+.testimonial-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-8px) rotateY(3deg) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Floating Contact Buttons */
+.floating-buttons {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+[dir="rtl"] .floating-buttons {
+  right: auto;
+  left: 30px;
+}
+
+.floating-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: floatSlow 3s ease-in-out infinite;
+}
+
+.floating-btn:hover {
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-btn {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  animation-delay: 0s;
+}
+
+.whatsapp-btn:hover {
+  animation: pulseGlow 1.5s infinite;
+}
+
+.phone-btn {
+  background: linear-gradient(135deg, #0066CC 0%, #004C99 100%);
+  animation-delay: 0.3s;
+}
+
+.phone-btn:hover {
+  animation: pulseGlow 1.5s infinite;
+}
+
+.floating-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: white;
+}
+
+/* Tooltip for floating buttons */
+.floating-btn::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 70px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+[dir="rtl"] .floating-btn::before {
+  right: auto;
+  left: 70px;
+}
+
+.floating-btn:hover::before {
+  opacity: 1;
+}
+
+/* Animated Statistics */
+.stat-number {
+  display: inline-block;
+  animation: bounceIn 0.8s ease-out;
+}
+
+/* Hero Section 3D Effect */
+.hero-content {
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-title {
+  animation: slideInFromLeft 1s ease-out;
+}
+
+.hero-subtitle {
+  animation: slideInFromRight 1s ease-out 0.3s backwards;
+}
+
+.hero-buttons {
+  animation: fadeInUp 1s ease-out 0.6s backwards;
+}
+
+/* Service Icons Animation */
+.service-icon {
+  display: inline-block;
+  font-size: 3rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.service-card:nth-child(1) .service-icon {
+  animation-delay: 0s;
+}
+
+.service-card:nth-child(2) .service-icon {
+  animation-delay: 0.2s;
+}
+
+.service-card:nth-child(3) .service-icon {
+  animation-delay: 0.4s;
+}
+
+.service-card:nth-child(4) .service-icon {
+  animation-delay: 0.6s;
+}
+
+/* Global Network Animation */
+.network-map {
+  animation: fadeInUp 1.2s ease-out;
+}
+
+/* Scroll Reveal Animation */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s ease-out;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Button 3D Effect */
+.btn-3d {
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.btn-3d:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 102, 204, 0.3);
+}
+
+.btn-3d:active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 5px 10px rgba(0, 102, 204, 0.2);
+}
+
+/* Mobile Responsive for Floating Buttons */
+@media (max-width: 768px) {
+  .floating-buttons {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  [dir="rtl"] .floating-buttons {
+    right: auto;
+    left: 20px;
+  }
+  
+  .floating-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .floating-btn svg {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .floating-btn::before {
+    display: none;
+  }
+}
+
+/* Parallax Effect Ready */
+.parallax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: 768px) {
+  .parallax {
+    background-attachment: scroll;
+  }
+}
