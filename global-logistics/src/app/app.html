@@ -1,0 +1,346 @@
+<!-- Navigation -->
+<nav class="fixed w-full top-0 z-50 bg-white shadow-md transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <div class="text-2xl font-bold text-primary-blue">
+          <span class="text-secondary-blue">Global</span> Logistics
+        </div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-8" [class.space-x-reverse]="currentLang === 'ar'">
+        <a (click)="scrollToSection('home')" class="nav-link cursor-pointer">{{ t('nav.home') }}</a>
+        <a (click)="scrollToSection('about')" class="nav-link cursor-pointer">{{ t('nav.about') }}</a>
+        <a (click)="scrollToSection('services')" class="nav-link cursor-pointer">{{ t('nav.services') }}</a>
+        <a (click)="scrollToSection('contact')" class="nav-link cursor-pointer">{{ t('nav.contact') }}</a>
+        
+        <!-- Language Toggle -->
+        <button (click)="toggleLanguage()" class="px-4 py-2 rounded-lg bg-light-blue text-primary-blue font-semibold hover:bg-primary-blue hover:text-white transition-all duration-300">
+          {{ currentLang === 'en' ? 'العربية' : 'English' }}
+        </button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button (click)="toggleMobileMenu()" class="text-primary-blue focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path *ngIf="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path *ngIf="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div *ngIf="mobileMenuOpen" class="md:hidden pb-4">
+      <a (click)="scrollToSection('home')" class="block py-2 text-gray-700 hover:text-primary-blue cursor-pointer">{{ t('nav.home') }}</a>
+      <a (click)="scrollToSection('about')" class="block py-2 text-gray-700 hover:text-primary-blue cursor-pointer">{{ t('nav.about') }}</a>
+      <a (click)="scrollToSection('services')" class="block py-2 text-gray-700 hover:text-primary-blue cursor-pointer">{{ t('nav.services') }}</a>
+      <a (click)="scrollToSection('contact')" class="block py-2 text-gray-700 hover:text-primary-blue cursor-pointer">{{ t('nav.contact') }}</a>
+      <button (click)="toggleLanguage()" class="mt-2 px-4 py-2 rounded-lg bg-light-blue text-primary-blue font-semibold w-full">
+        {{ currentLang === 'en' ? 'العربية' : 'English' }}
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background Image with Overlay -->
+  <div class="absolute inset-0 z-0">
+    <img src="assets/hero-ship.webp" alt="Cargo Ship" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-r from-secondary-blue/90 to-primary-blue/80"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 text-center text-white px-4 max-w-5xl mx-auto animate-fadeInUp">
+    <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+      {{ t('hero.title') }}
+    </h1>
+    <p class="text-xl md:text-2xl mb-10 text-gray-100">
+      {{ t('hero.subtitle') }}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <button (click)="scrollToSection('contact')" class="px-8 py-4 bg-white text-primary-blue rounded-lg font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl">
+        {{ t('hero.cta') }}
+      </button>
+      <button (click)="scrollToSection('about')" class="px-8 py-4 border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-blue transform hover:scale-105 transition-all duration-300">
+        {{ t('hero.learn') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{{ t('about.heading') }}</h2>
+      <div class="w-24 h-1 bg-primary-blue mx-auto mb-8"></div>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        {{ t('about.text') }}
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+      <div class="text-center p-8 bg-light-blue rounded-xl transform hover:scale-105 transition-all duration-300">
+        <div class="text-5xl font-bold text-primary-blue mb-2">{{ t('about.years') }}</div>
+        <div class="text-gray-700 font-semibold">{{ t('about.years.desc') }}</div>
+      </div>
+      <div class="text-center p-8 bg-light-blue rounded-xl transform hover:scale-105 transition-all duration-300">
+        <div class="text-5xl font-bold text-primary-blue mb-2">{{ t('about.countries') }}</div>
+        <div class="text-gray-700 font-semibold">{{ t('about.countries.desc') }}</div>
+      </div>
+      <div class="text-center p-8 bg-light-blue rounded-xl transform hover:scale-105 transition-all duration-300">
+        <div class="text-5xl font-bold text-primary-blue mb-2">{{ t('about.shipments') }}</div>
+        <div class="text-gray-700 font-semibold">{{ t('about.shipments.desc') }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{{ t('services.heading') }}</h2>
+      <div class="w-24 h-1 bg-primary-blue mx-auto"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Air Freight -->
+      <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+        <div class="text-5xl mb-4">✈️</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ t('services.air.title') }}</h3>
+        <p class="text-gray-600 leading-relaxed">{{ t('services.air.desc') }}</p>
+      </div>
+
+      <!-- Sea Freight -->
+      <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+        <div class="text-5xl mb-4">🚢</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ t('services.sea.title') }}</h3>
+        <p class="text-gray-600 leading-relaxed">{{ t('services.sea.desc') }}</p>
+      </div>
+
+      <!-- Customs Clearance -->
+      <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+        <div class="text-5xl mb-4">📋</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ t('services.customs.title') }}</h3>
+        <p class="text-gray-600 leading-relaxed">{{ t('services.customs.desc') }}</p>
+      </div>
+
+      <!-- Warehousing -->
+      <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+        <div class="text-5xl mb-4">🏭</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ t('services.warehouse.title') }}</h3>
+        <p class="text-gray-600 leading-relaxed">{{ t('services.warehouse.desc') }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Global Network Section -->
+<section id="network" class="py-20 bg-secondary-blue text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">{{ t('network.heading') }}</h2>
+      <div class="w-24 h-1 bg-white mx-auto mb-8"></div>
+      <p class="text-xl text-gray-200 max-w-3xl mx-auto">
+        {{ t('network.text') }}
+      </p>
+    </div>
+
+    <div class="mt-12 rounded-xl overflow-hidden shadow-2xl">
+      <img src="assets/global-network.jpg" alt="Global Network" class="w-full h-auto">
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{{ t('testimonials.heading') }}</h2>
+      <div class="w-24 h-1 bg-primary-blue mx-auto"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Testimonial 1 -->
+      <div class="bg-light-blue p-8 rounded-xl shadow-lg">
+        <div class="text-4xl text-primary-blue mb-4">"</div>
+        <p class="text-gray-700 mb-6 leading-relaxed">{{ t('testimonials.client1.text') }}</p>
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-primary-blue rounded-full flex items-center justify-center text-white font-bold text-xl">
+            {{ t('testimonials.client1.name').charAt(0) }}
+          </div>
+          <div [class.ml-4]="currentLang === 'en'" [class.mr-4]="currentLang === 'ar'">
+            <div class="font-bold text-gray-900">{{ t('testimonials.client1.name') }}</div>
+            <div class="text-sm text-gray-600">{{ t('testimonials.client1.company') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="bg-light-blue p-8 rounded-xl shadow-lg">
+        <div class="text-4xl text-primary-blue mb-4">"</div>
+        <p class="text-gray-700 mb-6 leading-relaxed">{{ t('testimonials.client2.text') }}</p>
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-primary-blue rounded-full flex items-center justify-center text-white font-bold text-xl">
+            {{ t('testimonials.client2.name').charAt(0) }}
+          </div>
+          <div [class.ml-4]="currentLang === 'en'" [class.mr-4]="currentLang === 'ar'">
+            <div class="font-bold text-gray-900">{{ t('testimonials.client2.name') }}</div>
+            <div class="text-sm text-gray-600">{{ t('testimonials.client2.company') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="bg-light-blue p-8 rounded-xl shadow-lg">
+        <div class="text-4xl text-primary-blue mb-4">"</div>
+        <p class="text-gray-700 mb-6 leading-relaxed">{{ t('testimonials.client3.text') }}</p>
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-primary-blue rounded-full flex items-center justify-center text-white font-bold text-xl">
+            {{ t('testimonials.client3.name').charAt(0) }}
+          </div>
+          <div [class.ml-4]="currentLang === 'en'" [class.mr-4]="currentLang === 'ar'">
+            <div class="font-bold text-gray-900">{{ t('testimonials.client3.name') }}</div>
+            <div class="text-sm text-gray-600">{{ t('testimonials.client3.company') }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{{ t('contact.heading') }}</h2>
+      <div class="w-24 h-1 bg-primary-blue mx-auto mb-8"></div>
+      <p class="text-xl text-gray-600">{{ t('contact.text') }}</p>
+    </div>
+
+    <form (ngSubmit)="submitForm()" class="bg-white p-8 rounded-xl shadow-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">{{ t('contact.name') }}</label>
+          <input 
+            type="text" 
+            [(ngModel)]="contactForm.name" 
+            name="name"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"
+            [placeholder]="t('contact.name')">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">{{ t('contact.email') }}</label>
+          <input 
+            type="email" 
+            [(ngModel)]="contactForm.email" 
+            name="email"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"
+            [placeholder]="t('contact.email')">
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-gray-700 font-semibold mb-2">{{ t('contact.phone') }}</label>
+        <input 
+          type="tel" 
+          [(ngModel)]="contactForm.phone" 
+          name="phone"
+          required
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"
+          [placeholder]="t('contact.phone')">
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-gray-700 font-semibold mb-2">{{ t('contact.message') }}</label>
+        <textarea 
+          [(ngModel)]="contactForm.message" 
+          name="message"
+          required
+          rows="5"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue"
+          [placeholder]="t('contact.message')"></textarea>
+      </div>
+
+      <button 
+        type="submit"
+        class="w-full bg-primary-blue text-white py-4 rounded-lg font-semibold text-lg hover:bg-secondary-blue transform hover:scale-105 transition-all duration-300 shadow-lg">
+        {{ t('contact.submit') }}
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-secondary-blue text-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <!-- About -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">{{ t('footer.about') }}</h3>
+        <p class="text-gray-300">{{ t('footer.about.text') }}</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">{{ t('footer.quick') }}</h3>
+        <ul class="space-y-2">
+          <li><a (click)="scrollToSection('home')" class="text-gray-300 hover:text-white cursor-pointer">{{ t('nav.home') }}</a></li>
+          <li><a (click)="scrollToSection('about')" class="text-gray-300 hover:text-white cursor-pointer">{{ t('nav.about') }}</a></li>
+          <li><a (click)="scrollToSection('services')" class="text-gray-300 hover:text-white cursor-pointer">{{ t('nav.services') }}</a></li>
+          <li><a (click)="scrollToSection('contact')" class="text-gray-300 hover:text-white cursor-pointer">{{ t('nav.contact') }}</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">{{ t('footer.services.title') }}</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>{{ t('services.air.title') }}</li>
+          <li>{{ t('services.sea.title') }}</li>
+          <li>{{ t('services.customs.title') }}</li>
+          <li>{{ t('services.warehouse.title') }}</li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h3 class="text-xl font-bold mb-4">{{ t('footer.contact.title') }}</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>📧 info&#64;globallogistics.com</li>
+          <li>📞 +971 4 123 4567</li>
+          <li>📍 {{ t('footer.address.text') }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Social Media & Copyright -->
+    <div class="border-t border-gray-600 pt-8 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-300 mb-4 md:mb-0">{{ t('footer.rights') }}</p>
+      <div class="flex space-x-4">
+        <a href="#" class="text-gray-300 hover:text-white text-2xl">📘</a>
+        <a href="#" class="text-gray-300 hover:text-white text-2xl">🐦</a>
+        <a href="#" class="text-gray-300 hover:text-white text-2xl">📷</a>
+        <a href="#" class="text-gray-300 hover:text-white text-2xl">💼</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<router-outlet />
