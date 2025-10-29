@@ -1,0 +1,182 @@
+<div class="row">
+  @for (analytic of AnalyticEcommerce; track analytic) {
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">{{ analytic.title }}</h6>
+        <h4 class="mb-3">
+          {{ analytic.amount }}
+          <span class="badge {{ analytic.background }} border {{ analytic.border }} ">
+            <i antIcon type="{{ analytic.icon }}" theme="outline"></i>
+            {{ analytic.percentage }}
+          </span>
+        </h4>
+        <p class="mb-0 text-muted text-sm">
+          You made an extra
+          <span class="{{ analytic.color }}">{{ analytic.number }}</span>
+          this year
+        </p>
+      </app-card>
+    </div>
+  }
+  <div class="col-md-12 col-xl-8">
+    <app-monthly-bar-chart />
+  </div>
+  <div class="col-md-12 col-xl-4">
+    <app-income-overview-chart />
+  </div>
+
+  <div class="col-md-12 col-xl-8">
+    <div class="title d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-3">Recent Shipments</h5>
+
+  <button 
+    type="button" 
+    class="btn btn-primary d-flex align-items-center gap-1"
+    data-bs-toggle="modal" 
+    data-bs-target="#addShipmentModal">
+    <i class="bi bi-plus-lg"></i> Add Shipment
+  </button>
+
+
+    </div>
+    <div class="card tbl-card">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Tracking Number</th>
+              <th>Shipment Type</th>
+              <th>Shipment Status</th>
+              <th class="text-end">Weight (kg)</th>
+              <th class="text-end">Shipping Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of recentOrder; track order) {
+              <tr>
+                <td>
+                  <a href="javascript:" class="text-muted">{{ order.id }}</a>
+                </td>
+                <td>{{ order.name }}</td>
+                <td>
+                  <span class="d-block">
+                    <i class="badge-circle {{ order.status_type }} f-10 m-r-5"></i>
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td class="text-end">{{ order.quantity }}</td>
+                <td class="text-end">{{ order.amount }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-xl-4">
+    <app-analytics-chart />
+  </div>
+
+  <div class="col-md-12 col-xl-8">
+    <app-sales-report-chart />
+  </div>
+  <!-- <div class="col-md-12 col-xl-4">
+    <h5 class="mb-3">Transaction History</h5>
+    <div class="card">
+      <div class="list-group list-group-flush">
+        @for (history of transaction; track history) {
+          <a href="javascript:" class="list-group-item list-group-item-action px-3">
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <div class="avatar avatar-s rounded-circle {{ history.background }}">
+                  <i class="f-16" antIcon type="{{ history.icon }}" theme="outline"></i>
+                </div>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h6 class="mb-1">{{ history.title }}</h6>
+                <p class="mb-0 text-muted">{{ history.time }}</p>
+              </div>
+              <div class="flex-shrink-0 text-end">
+                <h6 class="mb-1">{{ history.amount }}</h6>
+                <p class="mb-0 text-muted">{{ history.percentage }}</p>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="row justify-content-between">
+          <div class="col-auto">
+            <h5>Help & Support Chat</h5>
+            <p class="mb-3">Typical replay within 5 min</p>
+          </div>
+          <div class="col-auto">
+            <div class="user-group mb-3">
+              <img src="assets/images/user/avatar-1.jpg" alt="image" />
+              <img src="assets/images/user/avatar-2.jpg" alt="image" />
+              <img src="assets/images/user/avatar-3.jpg" alt="image" />
+            </div>
+          </div>
+        </div>
+        <div class="d-grid">
+          <div class="btn btn-primary">Need Help?</div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+<!-- Add Shipment Modal -->
+<div class="modal fade" id="addShipmentModal" tabindex="-1" aria-labelledby="addShipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="addShipmentModalLabel">Add New Shipment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Tracking Number</label>
+            <input type="text" class="form-control" placeholder="Enter tracking number">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Shipment Type</label>
+            <input type="text" class="form-control" placeholder="Enter shipment type">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Weight (kg)	</label>
+            <input type="text" class="form-control" placeholder="Origin location">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Shipping Cost</label>
+            <input type="text" class="form-control" placeholder="Destination location">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select">
+              <option selected>In Transit</option>
+              <option>Delivered</option>
+              <option>Pending</option>
+              <option>Delayed</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Save Shipment</button>
+      </div>
+
+    </div>
+  </div>
+</div>
