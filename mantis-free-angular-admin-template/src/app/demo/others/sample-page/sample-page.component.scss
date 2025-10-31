@@ -1,106 +1,431 @@
-.hero-section {
-  padding: 40px 0;
-  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 40%, #eafcff 100%);
+:root {
+  /* RGB values (helpful for rgb(var(--...) / alpha) syntax) */
+  --primary-blue-r: 0 76 153;
+  --secondary-blue-r: 0 102 204;
+
+  /* fallback hex */
+  --primary-blue: #004c99;
+  --secondary-blue: #0066cc;
+  --light-blue: #e8f4ff;
+
+  --nav-height: 72px; /* height of navbar */
+  --container-max: 1200px;
+  --footer-bg: #004c99;
+  --footer-contrast: #ffffff;
+  --footer-muted: rgba(255, 255, 255, 0.75);
+  --footer-muted-2: rgba(255, 255, 255, 0.6);
 }
 
-.hero-inner-column {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 18px;
+/* -----------------------
+   Global / layout tweaks
+   ----------------------- */
+* {
+  box-sizing: border-box;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-text h1 {
-  margin: 0 0 6px 0;
-  font-size: 1.9rem;
-  color: #0f1724;
-}
-.hero-text p {
-  margin: 0;
-  color: #475569;
-  font-size: 0.98rem;
+/* give page top padding so fixed navbar doesn't overlap content on very old browsers */
+body {
+  padding-top: var(--nav-height);
 }
 
-.hero-search {
-  width: 100%;
+li {
+  cursor: pointer;
 }
-.hero-input {
-  width: 100%;
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid rgba(15, 23, 36, 0.06);
-  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+
+section {
+  scroll-margin-top: calc(var(--nav-height) + 8px);
+}
+
+/* -----------------------
+   Navbar
+   ----------------------- */
+.navbar {
   transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.18s ease;
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    padding 0.25s ease,
+    transform 0.35s ease;
+  padding: 0.9rem 0; /* default padding */
+  background: transparent;
+  z-index: 1100;
+  will-change: background, transform;
 }
-.hero-input:focus {
-  border-color: #4b7cf3;
-  box-shadow: 0 10px 30px rgba(75, 124, 243, 0.08);
-  transform: translateY(-2px);
-  outline: none;
-}
-
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #4b7cf3, #00d4ff);
+.lang-btn {
+  background: transparent;
+  color: #0d6efd;
   border: none;
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 10px;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(75, 124, 243, 0.12);
+  font-size: 20px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #0d6efd;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+  z-index: -1;
+  border-radius: 8px;
+}
+
+.lang-btn:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.lang-btn:hover {
+  color: #fff;
+}
+
+.lang-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Add this class dynamically on scroll */
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  padding: 0.5rem 0;
+  transform: translateY(0);
+}
+
+/* brand */
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.navbar .text-secondary-blue {
+  color: rgb(var(--secondary-blue-r));
+}
+
+/* mobile toggler a bit smoother */
+.navbar-toggler {
+  border: none;
+  transition: transform 0.18s ease;
+}
+.navbar-toggler:active {
+  transform: scale(0.98);
+}
+
+/* collapse show animation */
+.collapse.navbar-collapse {
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease;
+  overflow: hidden;
+}
+.collapse.navbar-collapse.show {
+  animation: fadeInDown 0.28s ease both;
+}
+
+/* nav links */
+.nav-link {
+  position: relative;
+  transition: color 0.22s ease;
+  padding: 0.35rem 0;
+}
+.nav-link:hover {
+  color: rgb(var(--secondary-blue-r));
+}
+
+/* underline effect */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 0;
+  background: rgb(var(--secondary-blue-r));
+  transition: width 0.28s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+.nav-items-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  margin-inline-start: auto;
+
+  flex-wrap: nowrap;
+}
+
+
+/* language button */
+.btn-outline-primary {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.btn-outline-primary:active {
+  transform: translateY(1px);
+}
+/* pill background hover */
+.navbar .nav-item {
+  border-radius: 10px;
+  transition:
+    background-color 0.22s ease,
+    transform 0.15s ease;
+  padding: 2px; /* space for pill */
+}
+.navbar .nav-item:hover {
+  background-color: rgba(0, 76, 153, 0.06); /* subtle blue */
+  transform: translateY(-2px);
+}
+.navbar .nav-item:active {
+  transform: translateY(0);
+}
+.navbar .nav-link {
+  padding: 6px 8px; /* make link clickable area larger */
+  color: rgba(0, 0, 0, 0.8);
+}
+.navbar .nav-item:hover .nav-link {
+  color: var(--secondary-blue, #004c99);
+}
+
+/* -----------------------
+   Hero
+   ----------------------- */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* use modern rgb() / alpha syntax to match Tailwind exactly */
+  background: linear-gradient(to right, rgb(var(--secondary-blue-r) / 0.9), rgb(var(--primary-blue-r) / 0.8));
+  mix-blend-mode: multiply; /* comment out if you want raw colors */
+  backdrop-filter: blur(4px);
+  will-change: opacity, transform;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* hero content sizing */
+section#home .position-relative {
+  padding: 2rem 1rem;
+}
+@media (min-width: 992px) {
+  section#home .position-relative {
+    padding: 4rem 2rem;
+  }
+}
+
+/* hero buttons */
+.btn-light,
+.btn-outline-light {
   transition:
     transform 0.18s ease,
-    box-shadow 0.18s ease;
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
 }
-.btn-search:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(75, 124, 243, 0.16);
+.btn-light:hover,
+.btn-outline-light:hover {
+  transform: translateY(-4px);
+}
+.btn-light:active,
+.btn-outline-light:active {
+  transform: translateY(-1px);
 }
 
-.btn-outline-light.add-btn {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(15, 23, 36, 0.06);
-  color: #0f1724;
-  padding: 9px 14px;
-  border-radius: 10px;
-  font-weight: 600;
-  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04);
+/* scroll indicator */
+section#home svg {
+  transition: transform 0.3s ease;
 }
-.btn-outline-light.add-btn:hover {
+section#home svg:hover {
+  transform: translateY(4px);
+}
+
+/* -----------------------
+   Cards / services / testimonials
+   ----------------------- */
+/* improved hover for cards (already had) */
+.card-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+    box-shadow 0.35s ease;
+  transform: translateY(0);
+  will-change: transform, box-shadow;
+}
+.card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 22px 32px rgba(8, 20, 50, 0.08);
+}
+
+/* entrance animation (use IntersectionObserver to add .in-view) */
+.animate-on-scroll .fade-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    transform 0.6s cubic-bezier(0.22, 0.9, 0.3, 1),
+    opacity 0.6s ease;
+  will-change: transform, opacity;
+}
+.animate-on-scroll .fade-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* optional stagger using nth-child (services grid) */
+#services .row .col-lg-3 {
+  --d: 0ms;
+}
+#services .row .col-lg-3:nth-child(1) {
+  --d: 40ms;
+}
+#services .row .col-lg-3:nth-child(2) {
+  --d: 120ms;
+}
+#services .row .col-lg-3:nth-child(3) {
+  --d: 200ms;
+}
+#services .row .col-lg-3:nth-child(4) {
+  --d: 280ms;
+}
+#services .row .col-lg-3 .fade-item {
+  transition-delay: var(--d);
+}
+
+/* -----------------------
+   Footer
+   ----------------------- */
+/* Footer sizes enhanced for readability */
+.site-footer {
+  background: #004c99;
+  color: #ffffff;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  font-size: 16px; /* base size for footer text */
+  line-height: 1.55;
+}
+
+/* brand */
+.footer-brand {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 20px; /* bigger brand */
+  font-weight: 700;
+}
+.brand-accent {
+  color: #77b6ff;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+/* titles */
+.footer-title {
+  font-size: 1.05rem; /* ~18px */
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+}
+
+/* links and small text */
+.footer-links .link-item,
+.link-item {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition:
+    color 0.18s ease,
+    transform 0.12s ease;
+  font-size: 1rem; /* 16px */
+}
+.footer-links .link-item:hover,
+.link-item:hover {
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.06);
+  text-decoration: none;
 }
 
-.total-text {
-  color: #475569;
-  font-weight: 500;
+/* list small text (services/contact lines) */
+.list-unstyled.small,
+.text-white-75 {
+  font-size: 0.98rem; /* ~15.7px for better readability */
+  color: rgba(255, 255, 255, 0.85);
 }
 
-@media (max-width: 576px) {
-  .hero-inner-column {
-    padding: 12px;
-    gap: 12px;
+/* bottom row */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+}
+
+/* social icons: a bit larger and more comfortable to tap */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
+}
+.social-link svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.social-link:hover,
+.social-link:focus {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+  outline: none;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+}
+
+/* responsive: center on small screens and increase spacing */
+@media (max-width: 767.98px) {
+  .site-footer {
+    font-size: 15.5px;
   }
-  .hero-text h1 {
-    font-size: 1.4rem;
+  .footer-bottom {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
   }
-  .btn-search,
-  .btn-outline-light.add-btn {
-    padding: 8px 12px;
-    font-size: 0.95rem;
+  .footer-brand {
+    justify-content: center;
+    font-size: 18px;
   }
-  .hero-actions {
-    justify-content: flex-start;
+  .socials {
+    justify-content: center;
   }
 }
+
+/* RTL support */
+[dir='rtl'] .footer-links {
+  text-align: right;
+}
+[dir='rtl'] .footer-brand {
+  direction: rtl;
+}
+[dir='rtl'] .socials {
+  direction: ltr;
+}
+
+/* accessibility: visible focus */
+.link-item:focus,
+.social-link:focus {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+/* CSS (اضف لتاب CSS بتاعك) */
+/* استخدام الخصائص المنطقية لتجنب مشاكل LTR/RTL */

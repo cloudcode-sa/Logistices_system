@@ -6,6 +6,9 @@ Support: https://codedthemes.support-hub.io/
 File: style.css
 =========================================================================
 =================================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
 
 // main framework
 @import 'node_modules/bootstrap/scss/functions';
@@ -36,3 +39,12 @@ File: style.css
 @import 'scss/themes/layouts/footer/footer.scss';
 
 @import 'scss/themes/preset-style.scss';
+html[dir="rtl"], [dir="rtl"] {
+font-family: "IBM Plex Sans", sans-serif !important;
+background-color: red ;
+}
+
+html[dir="rtl"] body {
+  font-family: "IBM Plex Sans", sans-serif !important;
+
+}

@@ -1,24 +1,331 @@
-<section class="hero-section">
+<!-- HTML (Angular) -->
+<nav class="navbar navbar-expand-md navbar-light bg-white shadow fixed-top py-3"
+     [attr.dir]="currentLang === 'ar' ? 'rtl' : 'ltr'"
+     style="transition: all .3s;">
   <div class="container">
-    <div class="hero-inner-column">
-      <div class="hero-text">
-        <h1>Track your shipment</h1>
-        <p class="my-3">Enter your shipment number to get the latest updates.</p>
+    <!-- Logo -->
+    <a class="navbar-brand d-flex align-items-center" href="#home">
+      <div class="fw-bold fs-4">
+        <span class="text-primary">Global</span> Logistics
       </div>
+    </a>
 
-      <div class="hero-search">
-        <input
-          type="text"
-          class="form-control hero-input"
-          id="trackingSearch"
-          placeholder="Search by tracking number (123456)"
-          aria-label="Search shipments"
-        />
+    <!-- Toggler for mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <svg class="bi" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Navigation links -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- use flex-nowrap so items don't wrap when switching dir -->
+      <ul class="navbar-nav nav-items-wrapper mb-2 mb-md-0 align-items-center">
+        <li class="nav-item">
+          <a class="nav-link active" href="#home">{{ t('nav.home') }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about">{{ t('nav.about') }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#services">{{ t('nav.services') }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact">{{ t('nav.contact') }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link cursor-pointer" routerLink="/login">{{ t('nav.login') }}</a>
+        </li>
+        <!-- Language Toggle -->
+        <li class="nav-item">
+          <button class="btn btn-sm lang-btn" (click)="toggleLanguage()" type="button">
+            {{ currentLang === 'en' ? 'العربية' : 'English' }}
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Hero Section -->
+<section id="home" class="position-relative d-flex align-items-center justify-content-center" style="height:100vh; overflow:hidden;">
+  <!-- Background Image with Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100">
+    <img src="../../../../assets/images/landing page/hero-ship.webp" alt="Cargo Ship" class="w-100 h-100 object-fit-cover">
+    <div class="position-absolute top-0 start-0 w-100 h-100 hero-overlay"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="position-relative text-center text-white px-3" style="max-width:900px; z-index:2;">
+    <h1 class="display-4 fw-bold mb-3 text-white">
+      {{ t('hero.title') }}
+    </h1>
+    <p class="lead mb-4">
+      {{ t('hero.subtitle') }}
+    </p>
+    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+      <button (click)="scrollToSection('contact')" class="btn btn-light btn-lg px-4 py-2 shadow">
+        {{ t('hero.cta') }}
+      </button>
+      <button (click)="scrollToSection('about')" class="btn btn-outline-light btn-lg px-4 py-2">
+        {{ t('hero.learn') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4 " style="cursor: pointer;" (click)="scrollToSection('about')">
+    <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-white">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5 bg-white" style="scroll-margin-top: 80px;">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold mb-3 fs-2">{{ t('about.heading') }}</h2>
+      <div class="mx-auto mb-3" style="width:96px;height:6px;background:var(--primary-blue);"></div>
+      <p class="text-muted mx-auto" style="max-width:720px;">{{ t('about.text') }}</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-4 mt-4">
+      <div class="col-md-4 ">
+        <div class="p-4 rounded-3 bg-light text-center h-100 card-hover">
+          <div class="fs-1 fw-bold text-primary mb-2">{{ t('about.years') }}</div>
+          <div class="text-muted fw-semibold">{{ t('about.years.desc') }}</div>
+        </div>
       </div>
-
-      <div class="hero-actions d-flex align-items-center gap-3">
-        <button class="btn btn-search" id="btnSearch" type="button">Search</button>
+      <div class="col-md-4 ">
+        <div class="p-4 rounded-3 bg-light text-center h-100 card-hover">
+          <div class="fs-1 fw-bold text-primary mb-2">{{ t('about.countries') }}</div>
+          <div class="text-muted fw-semibold">{{ t('about.countries.desc') }}</div>
+        </div>
+      </div>
+      <div class="col-md-4 ">
+        <div class="p-4 rounded-3 bg-light text-center h-100 card-hover">
+          <div class="fs-1 fw-bold text-primary mb-2">{{ t('about.shipments') }}</div>
+          <div class="text-muted fw-semibold">{{ t('about.shipments.desc') }}</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Services Section -->
+<section id="services" class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold mb-3">{{ t('services.heading') }}</h2>
+      <div class="mx-auto mb-3" style="width:96px;height:6px;background:var(--primary-blue);"></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 mb-3">✈️</div>
+            <h5 class="card-title fw-bold">{{ t('services.air.title') }}</h5>
+            <p class="card-text text-muted">{{ t('services.air.desc') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 mb-3">🚢</div>
+            <h5 class="card-title fw-bold">{{ t('services.sea.title') }}</h5>
+            <p class="card-text text-muted">{{ t('services.sea.desc') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 mb-3">📋</div>
+            <h5 class="card-title fw-bold">{{ t('services.customs.title') }}</h5>
+            <p class="card-text text-muted">{{ t('services.customs.desc') }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 mb-3">🏭</div>
+            <h5 class="card-title fw-bold">{{ t('services.warehouse.title') }}</h5>
+            <p class="card-text text-muted">{{ t('services.warehouse.desc') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Global Network Section -->
+<section id="network" class=" text-white " style="background:#004c99; padding: 80px;">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold mb-3 fs-1 text-white">{{ t('network.heading') }}</h2>
+      <div class="mx-auto mb-3" style="width:96px;height:6px;background:#fff;"></div>
+      <p class="lead mx-auto" style="max-width:720px;">{{ t('network.text') }}</p>
+    </div>
+
+    <div class="mt-4 rounded-3 overflow-hidden  d-flex justify-content-center align-items-center mt-5" >
+      <!-- fix path if folder name has spaces -->
+      <img src="../../../../assets/images/landing page/global-network.jpg" alt="Global Network" class="rounded-4 img-fluid">
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold mb-3">{{ t('testimonials.heading') }}</h2>
+      <div class="mx-auto mb-3" style="width:96px;height:6px;background:var(--primary-blue);"></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let i of [1,2,3]; let idx = index">
+        <!-- you can replace loop with explicit items if needed -->
+        <div class="p-4 rounded-3 bg-light h-100 shadow-sm">
+          <div class="fs-2 text-primary mb-3">"</div>
+          <p class="text-muted mb-4">
+            {{ t('testimonials.client' + (idx+1) + '.text') }}
+          </p>
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-weight:700;">
+              {{ t('testimonials.client' + (idx+1) + '.name').charAt(0) }}
+            </div>
+            <div [ngClass]="{'ms-3': currentLang === 'en', 'me-3': currentLang === 'ar'}">
+              <div class="fw-bold text-dark">{{ t('testimonials.client' + (idx+1) + '.name') }}</div>
+              <div class="small text-muted">{{ t('testimonials.client' + (idx+1) + '.company') }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5 bg-light">
+  <div class="container" style="max-width:900px;">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">{{ t('contact.heading') }}</h2>
+      <div class="mx-auto mb-3" style="width:96px;height:6px;background:var(--primary-blue);"></div>
+      <p class="lead">{{ t('contact.text') }}</p>
+    </div>
+
+    <form (ngSubmit)="submitForm()" class="bg-white p-4 rounded-3 shadow-sm">
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">{{ t('contact.name') }}</label>
+          <input type="text" [(ngModel)]="contactForm.name" name="name" required class="form-control" [placeholder]="t('contact.name')">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">{{ t('contact.email') }}</label>
+          <input type="email" [(ngModel)]="contactForm.email" name="email" required class="form-control" [placeholder]="t('contact.email')">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">{{ t('contact.phone') }}</label>
+        <input type="tel" [(ngModel)]="contactForm.phone" name="phone" required class="form-control" [placeholder]="t('contact.phone')">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">{{ t('contact.message') }}</label>
+        <textarea [(ngModel)]="contactForm.message" name="message" required rows="5" class="form-control" [placeholder]="t('contact.message')"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2">{{ t('contact.submit') }}</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer py-5" role="contentinfo" [attr.dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <div class="container">
+    <div class="row gy-4 align-items-start">
+      <!-- About -->
+      <div class="col-12 col-md-4">
+        <a class="footer-brand d-flex align-items-center mb-3 text-white text-decoration-none" href="#home" (click)="scrollToSection('home')">
+          <div class="fw-bold fs-5">
+            <span class="brand-accent">Global</span>&nbsp;Logistics
+          </div>
+        </a>
+        <p class="small text-white-75 mb-0">{{ t('footer.about.text') }}</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-6 col-md-2">
+        <h6 class="footer-title text-white mb-2">{{ t('footer.quick') }}</h6>
+        <ul class="list-unstyled footer-links mb-0">
+          <li><a (click)="scrollToSection('home')" class="link-item"> {{ t('nav.home') }} </a></li>
+          <li><a (click)="scrollToSection('about')" class="link-item"> {{ t('nav.about') }} </a></li>
+          <li><a (click)="scrollToSection('services')" class="link-item"> {{ t('nav.services') }} </a></li>
+          <li><a (click)="scrollToSection('contact')" class="link-item"> {{ t('nav.contact') }} </a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="col-6 col-md-3">
+        <h6 class="footer-title text-white mb-2">{{ t('footer.services.title') }}</h6>
+        <ul class="list-unstyled footer-links mb-0">
+          <li class="small text-white-75">{{ t('services.air.title') }}</li>
+          <li class="small text-white-75">{{ t('services.sea.title') }}</li>
+          <li class="small text-white-75">{{ t('services.customs.title') }}</li>
+          <li class="small text-white-75">{{ t('services.warehouse.title') }}</li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-12 col-md-3">
+        <h6 class="footer-title text-white mb-2">{{ t('footer.contact.title') }}</h6>
+        <ul class="list-unstyled small mb-0">
+          <li class="text-white-75">📧 <a href="mailto:info@globallogistics.com" class="link-item">info loballogistics.com</a></li>
+          <li class="text-white-75">📞 <a href="tel:+97141234567" class="link-item">+971 4 123 4567</a></li>
+          <li class="text-white-75">📍 {{ t('footer.address.text') }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4 pt-3 border-top">
+      <p class="mb-0 small text-white-50">{{ t('footer.rights') }}</p>
+
+      <div class="socials d-flex align-items-center gap-2">
+        <a href="#" class="social-link" aria-label="Facebook" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M22 12.07C22 6.55 17.52 2 12 2S2 6.55 2 12.07C2 17.12 5.66 21.26 10.44 22v-7.02H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22C18.34 21.26 22 17.12 22 12.07z" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a href="#" class="social-link" aria-label="Twitter" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M22 5.92c-.66.3-1.37.5-2.12.6.76-.46 1.34-1.19 1.61-2.06-.71.42-1.5.73-2.34.9C18.4 4.16 17.2 3.5 15.86 3.5c-2.34 0-4.24 1.9-4.24 4.24 0 .33.04.65.11.95C7.69 8.4 4.06 6.64 1.67 3.9c-.36.62-.56 1.34-.56 2.11 0 1.46.74 2.75 1.86 3.51-.6-.02-1.17-.18-1.66-.46v.05c0 2.03 1.45 3.73 3.36 4.12-.35.1-.72.15-1.09.15-.27 0-.54-.03-.8-.08.54 1.68 2.1 2.9 3.94 2.94-1.44 1.12-3.25 1.79-5.22 1.79-.34 0-.68-.02-1.01-.06C6.01 21.1 8.3 22 10.78 22c6.95 0 10.76-5.76 10.76-10.76v-.49c.74-.53 1.36-1.2 1.86-1.97-.68.31-1.4.54-2.15.64.77-.46 1.36-1.19 1.64-2.06z" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a href="#" class="social-link" aria-label="Instagram" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.5A4.5 4.5 0 1 0 16.5 13 4.5 4.5 0 0 0 12 8.5zM18.7 6.3a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z" fill="currentColor"/>
+          </svg>
+        </a>
+
+        <a href="#" class="social-link" aria-label="LinkedIn" rel="noopener noreferrer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM8.34 18.34H5.67v-7.67h2.66v7.67zM7 9.67A1.55 1.55 0 1 1 8.55 8.12 1.55 1.55 0 0 1 7 9.67zM19 18.34h-2.67v-4.02c0-.96-.02-2.2-1.34-2.2-1.34 0-1.55 1.05-1.55 2.13v4.09H11v-7.67h2.56v1.05h.04a2.8 2.8 0 0 1 2.52-1.39c2.7 0 3.2 1.78 3.2 4.08v3.83z" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

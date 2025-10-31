@@ -68,22 +68,7 @@ export class NavRightComponent {
   }
 
   profile = [
-    {
-      icon: 'edit',
-      title: 'Edit Profile'
-    },
-    {
-      icon: 'user',
-      title: 'View Profile'
-    },
-    {
-      icon: 'profile',
-      title: 'Social Profile'
-    },
-    {
-      icon: 'wallet',
-      title: 'Billing'
-    },
+ 
     {
       icon: 'logout',
       title: 'Logout'

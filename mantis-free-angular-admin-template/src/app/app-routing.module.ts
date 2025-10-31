@@ -7,47 +7,70 @@ import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.compon
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
 
 const routes: Routes = [
+  // ✅ الصفحة الأساسية (sample-page)
+  {
+    path: '',
+    loadComponent: () =>
+      import('./demo/others/sample-page/sample-page.component').then(
+        (c) => c.SamplePageComponent
+      )
+  },
+
+  // ✅ لو عايز الداشبورد والصفحات التانية
   {
     path: '',
     component: AdminComponent,
     children: [
       {
-        path: '',
-        redirectTo: '/dashboard/default',
-        pathMatch: 'full'
-      },
-      {
         path: 'dashboard/default',
-        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
+        loadComponent: () =>
+          import('./demo/dashboard/default/default.component').then(
+            (c) => c.DefaultComponent
+          )
       },
       {
         path: 'typography',
-        loadComponent: () => import('./demo/component/basic-component/typography/typography.component').then((c) => c.TypographyComponent)
+        loadComponent: () =>
+          import(
+            './demo/component/basic-component/typography/typography.component'
+          ).then((c) => c.TypographyComponent)
       },
       {
         path: 'color',
-        loadComponent: () => import('./demo/component/basic-component/color/color.component').then((c) => c.ColorComponent)
-      },
-      {
-        path: 'sample-page',
-        loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
+        loadComponent: () =>
+          import('./demo/component/basic-component/color/color.component').then(
+            (c) => c.ColorComponent
+          )
       }
     ]
   },
+
+  // ✅ صفحات الضيوف (تسجيل الدخول والتسجيل)
   {
     path: '',
     component: GuestLayoutComponent,
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./demo/pages/authentication/auth-login/auth-login.component').then((c) => c.AuthLoginComponent)
+        loadComponent: () =>
+          import(
+            './demo/pages/authentication/auth-login/auth-login.component'
+          ).then((c) => c.AuthLoginComponent)
       },
       {
         path: 'register',
         loadComponent: () =>
-          import('./demo/pages/authentication/auth-register/auth-register.component').then((c) => c.AuthRegisterComponent)
+          import(
+            './demo/pages/authentication/auth-register/auth-register.component'
+          ).then((c) => c.AuthRegisterComponent)
       }
     ]
+  },
+
+  // ✅ fallback لأي مسار مش معروف
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 

@@ -1,6 +1,6 @@
 <ul class="list-unstyled">
   <li class="pc-h-item">
-    <a href="https://github.com/codedthemes/mantis-free-angular-admin-template" target="_blank" class="pc-head-link me-0 bg-gray-200">
+    <a href="https://github.com/cloudcode-sa/Logistices_system" target="_blank" class="pc-head-link me-0 bg-gray-200">
       <i antIcon type="github" theme="outline"></i>
     </a>
   </li>
@@ -92,7 +92,6 @@
   <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
     <a href="javascript:" class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
       <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar me-2" />
-      <span class="f-w-600">Belal elnagar</span>
     </a>
     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header">
@@ -124,22 +123,7 @@
             }
           </ng-template>
         </li>
-        <li ngbNavItem="2">
-          <a ngbNavLink>
-            <i class="me-2" antIcon theme="outline" type="setting"></i>
-            Setting
-          </a>
-          <ng-template ngbNavContent>
-            @for (task of setting; track task) {
-              <div>
-                <a href="javascript:" class="dropdown-item">
-                  <i class="text-muted" antIcon theme="outline" type="{{ task.icon }}"></i>
-                  <span>{{ task.title }}</span>
-                </a>
-              </div>
-            }
-          </ng-template>
-        </li>
+   
       </ul>
       <div [ngbNavOutlet]="nav"></div>
     </div>

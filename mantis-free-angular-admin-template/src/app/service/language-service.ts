@@ -17,6 +17,8 @@ export class LanguageService {
       'nav.about': 'About',
       'nav.services': 'Services',
       'nav.contact': 'Contact',
+      'nav.login': 'login',
+
       
       // Hero Section
       'hero.title': 'Your Global Shipping Partner',
@@ -93,6 +95,8 @@ export class LanguageService {
       'nav.about': 'من نحن',
       'nav.services': 'الخدمات',
       'nav.contact': 'اتصل بنا',
+      'nav.login': 'تسجيل الدخول',
+
       
       // Hero Section
       'hero.title': 'شريكك العالمي في الشحن',
