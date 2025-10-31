@@ -2,52 +2,71 @@
   <div class="auth-wrapper v3">
     <div class="auth-form">
       <div class="auth-header text-center">
-        <img src="assets/images/logo.png" width="100px" alt="logo" class="logo logo-dark logo-lg" />
+        <img src="assets/images/logo.png" width="100px" alt="theme-logo" class="logo logo-dark logo-lg" />
       </div>
 
       <div class="card my-5">
         <div class="card-body">
-          <h3 class="mb-4 text-center fw-bold">تسجيل الدخول</h3>
+          <h3 class="mb-4 text-center"><b>تسجيل الدخول</b></h3>
 
-          <!-- رسالة نجاح أو خطأ -->
-          <div *ngIf="infoMessage" class="alert alert-success py-2">{{ infoMessage }}</div>
-          <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+          <!-- Form مربوط بـ AuthService -->
+          <form (ngSubmit)="login()">
+            <div class="form-group mb-3">
+              <label for="email">البريد الإلكتروني</label>
+              <input
+                type="email"
+                id="email"
+                [(ngModel)]="email"
+                name="email"
+                required
+                class="form-control"
+                placeholder="أدخل بريدك الإلكتروني"
+              />
+            </div>
 
-          <!-- البريد -->
-          <div class="form-group mb-3">
-            <label class="form-label" for="email">البريد الإلكتروني</label>
-            <input
-              [(ngModel)]="email"
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="example@email.com"
-              required
-            />
-          </div>
+            <div class="form-group mb-3">
+              <label for="password">كلمة المرور</label>
+              <input
+                type="password"
+                id="password"
+                [(ngModel)]="password"
+                name="password"
+                required
+                class="form-control"
+                placeholder="أدخل كلمة المرور"
+              />
+            </div>
 
-          <!-- زر إرسال رابط الدخول -->
-          <div class="d-grid mt-4">
+            <div class="d-flex justify-content-between mb-3">
+              <div class="form-check">
+                <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked />
+                <label class="form-check-label text-muted" for="customCheckc1">تذكرني</label>
+              </div>
+            </div>
+
             <button
-              type="button"
-              class="btn btn-primary"
-              (click)="sendMagicLink()"
-              [disabled]="loading || !email"
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="loading"
             >
-              {{ loading ? 'جاري الإرسال...' : 'إرسال رابط تسجيل الدخول' }}
+              {{ loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول' }}
             </button>
-          </div>
 
-          <div class="text-center mt-3 text-muted">
-            <small>سيتم إرسال رابط الدخول إلى بريدك الإلكتروني</small>
-          </div>
+            <!-- Error message -->
+            <div *ngIf="error" class="alert alert-danger mt-3">
+              {{ error }}
+            </div>
+          </form>
         </div>
       </div>
 
-      <div class="auth-footer text-center">
-        <p class="m-0">
-          © جميع الحقوق محفوظة <a href="#">Cloud Code</a>
-        </p>
+      <div class="auth-footer row ">
+        <div class="col my-1">
+          <p class="m-0">
+            Copyright © 
+            <a href="https://codedthemes.com/" target="_blank">cloud code</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>

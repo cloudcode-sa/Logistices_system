@@ -1,4 +1,3 @@
-// src/app/auth/auth-login/auth-login.component.ts
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -20,34 +19,33 @@ export class AuthLoginComponent {
   password = '';
   loading = false;
   error: string | null = null;
-  infoMessage: string | null = null;
 
   constructor() {
+    // لو المستخدم بالفعل مسجل دخول -> يحوله على الداشبورد
     this.auth.user$.subscribe(user => {
       if (user) {
-        // redirect if user is found
         try {
           this.router.navigate(['/dashboard/default']);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-        } catch (e) { /* ignore */ }
+        } catch {
+          // تجاهل أي خطأ أثناء التوجيه
+        }
       }
     });
   }
 
-  async sendMagicLink() {
+  // ✅ تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+  async login() {
     this.error = null;
-    this.infoMessage = null;
     this.loading = true;
+
     try {
-      await this.auth.signInWithMagicLink(this.email, window.location.origin + '/dashboard/default');
-      this.infoMessage = 'تم إرسال لينك تسجيل الدخول إلى بريدك.';
+      await this.auth.signIn(this.email, this.password); // ✅ استخدم signIn بدل signInWithPassword
+      await this.router.navigate(['/dashboard/default']); // ✅ توجيه بعد تسجيل الدخول
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      this.error = err?.message || 'Failed to send magic link';
+      this.error = err?.message || 'فشل تسجيل الدخول. تأكد من البيانات.';
     } finally {
       this.loading = false;
     }
   }
-
-
 }

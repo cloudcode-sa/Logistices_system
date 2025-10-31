@@ -37,15 +37,16 @@ import { AuthService } from 'src/app/service/auth-service';
   styleUrls: ['./nav-right.component.scss']
 })
 export class NavRightComponent {
-   private auth = inject(AuthService);
+  private auth = inject(AuthService);
   private router = inject(Router);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user$: Observable<any | null> = this.auth.user$;
-    async logout() {
+
+  async logout() {
     try {
-      await this.auth.signOut();
-      this.router.navigate(['/']); // يرجع المستخدم للصفحة الرئيسية بعد تسجيل الخروج
+      await this.auth.signOut(); 
+      await this.router.navigate(['/login']); 
     } catch (err) {
       console.error('Sign out error:', err);
     }
