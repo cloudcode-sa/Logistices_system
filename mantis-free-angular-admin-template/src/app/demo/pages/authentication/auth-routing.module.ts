@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { RouterModule } from '@angular/router';
 import { AuthLoginComponent } from './auth-login/auth-login.component';
+import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 
 
 @NgModule({
@@ -10,7 +11,8 @@ import { AuthLoginComponent } from './auth-login/auth-login.component';
     CommonModule,
     FormsModule,
     RouterModule,
-    AuthLoginComponent
+    AuthLoginComponent,
+    SpinnerComponent
   ]
 })
 export class AuthModule {}

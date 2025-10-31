@@ -1,3 +1,5 @@
+
+
 <div class="auth-main">
   <div class="auth-wrapper v3">
     <div class="auth-form">
@@ -9,8 +11,8 @@
         <div class="card-body">
           <h3 class="mb-4 text-center"><b>تسجيل الدخول</b></h3>
 
-          <!-- Form مربوط بـ AuthService -->
-          <form (ngSubmit)="login()">
+          <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
+            <!-- البريد الإلكتروني -->
             <div class="form-group mb-3">
               <label for="email">البريد الإلكتروني</label>
               <input
@@ -19,11 +21,18 @@
                 [(ngModel)]="email"
                 name="email"
                 required
+                email
+                #emailRef="ngModel"
                 class="form-control"
                 placeholder="أدخل بريدك الإلكتروني"
               />
+              <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)" class="invalid-feedback d-block">
+                <small *ngIf="emailRef.errors?.['required']">البريد الإلكتروني مطلوب</small>
+                <small *ngIf="emailRef.errors?.['email']">البريد الإلكتروني غير صالح</small>
+              </div>
             </div>
 
+            <!-- كلمة المرور -->
             <div class="form-group mb-3">
               <label for="password">كلمة المرور</label>
               <input
@@ -32,27 +41,25 @@
                 [(ngModel)]="password"
                 name="password"
                 required
+                minlength="6"
+                #passwordRef="ngModel"
                 class="form-control"
                 placeholder="أدخل كلمة المرور"
               />
-            </div>
-
-            <div class="d-flex justify-content-between mb-3">
-              <div class="form-check">
-                <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked />
-                <label class="form-check-label text-muted" for="customCheckc1">تذكرني</label>
+              <div *ngIf="passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)" class="invalid-feedback d-block">
+                <small *ngIf="passwordRef.errors?.['required']">كلمة المرور مطلوبة</small>
+                <small *ngIf="passwordRef.errors?.['minlength']">كلمة المرور لا تقل عن 6 أحرف</small>
               </div>
             </div>
 
             <button
               type="submit"
               class="btn btn-primary w-100"
-              [disabled]="loading"
+              [disabled]="loading || loginForm.invalid"
             >
               {{ loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول' }}
             </button>
 
-            <!-- Error message -->
             <div *ngIf="error" class="alert alert-danger mt-3">
               {{ error }}
             </div>
@@ -60,7 +67,7 @@
         </div>
       </div>
 
-      <div class="auth-footer row ">
+      <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
             Copyright © 
@@ -70,4 +77,8 @@
       </div>
     </div>
   </div>
+</div>
+<div class="spinner-overlay" *ngIf="loading">
+  <div class="spinner-fancy"></div>
+  <p>جاري تسجيل الدخول...</p>
 </div>
