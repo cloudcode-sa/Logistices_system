@@ -4,17 +4,32 @@ import { CommonModule } from '@angular/common';
 
 
 import { LanguageService } from 'src/app/service/language-service';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import {  Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/service/auth-service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sample-page',
-  imports: [CommonModule, RouterOutlet, FormsModule, RouterLink],
+  imports: [CommonModule , FormsModule, RouterLink],
   templateUrl: './sample-page.component.html',
   styleUrls: ['./sample-page.component.scss']
 })
 export class SamplePageComponent {
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
+  // نحفظ الـ observable مباشرة
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user$: Observable<any | null> = this.auth.user$;
+
+  goToDashboardOrLogin(isLoggedIn: boolean) {
+    if (isLoggedIn) {
+      this.router.navigate(['/dashboard/default']).catch(err => console.warn(err));
+    } else {
+      this.router.navigate(['/login']).catch(err => console.warn(err));
+    }
+  }
   
     languageService = inject(LanguageService);
   

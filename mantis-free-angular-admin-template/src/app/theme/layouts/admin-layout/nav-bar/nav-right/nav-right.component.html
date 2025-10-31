@@ -117,7 +117,7 @@
               <div>
                 <a href="javascript:" class="dropdown-item">
                   <i class="text-muted" antIcon theme="outline" type="{{ task.icon }}"></i>
-                  <span>{{ task.title }}</span>
+                  <span (click)="logout()" >{{ task.title }}</span>
                 </a>
               </div>
             }

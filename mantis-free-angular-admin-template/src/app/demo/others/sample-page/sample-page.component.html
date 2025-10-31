@@ -34,9 +34,16 @@
         <li class="nav-item">
           <a class="nav-link" href="#contact">{{ t('nav.contact') }}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link cursor-pointer" routerLink="/login">{{ t('nav.login') }}</a>
-        </li>
+       <li class="nav-item">
+  <!-- نستخدم async لنعرف لو المستخدم موجود -->
+  <ng-container *ngIf="user$ | async as user; else notLogged">
+    <a class="nav-link cursor-pointer" (click)="goToDashboardOrLogin(!!user)">{{ t('nav.Dashboard') }}</a>
+  </ng-container>
+
+  <ng-template #notLogged>
+    <a class="nav-link cursor-pointer" (click)="goToDashboardOrLogin(false)">{{ t('nav.login') }}</a>
+  </ng-template>
+</li>
         <!-- Language Toggle -->
         <li class="nav-item">
           <button class="btn btn-sm lang-btn" (click)="toggleLanguage()" type="button">
