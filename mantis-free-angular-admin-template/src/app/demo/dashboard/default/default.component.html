@@ -1,5 +1,5 @@
 <div class="row">
-  @for (analytic of AnalyticEcommerce; track analytic) {
+  <!-- @for (analytic of AnalyticEcommerce; track analytic) {
     <div class="col-md-6 col-xl-3">
       <app-card [showHeader]="false" blockClass="dashboard-card">
         <h6 class="mb-2 f-w-400 text-muted">{{ analytic.title }}</h6>
@@ -17,62 +17,275 @@
         </p>
       </app-card>
     </div>
-  }
+  } -->
   <div class="col-md-12 col-xl-8">
     <app-monthly-bar-chart />
   </div>
   <div class="col-md-12 col-xl-4">
     <app-income-overview-chart />
   </div>
+<div class="col-md-12 col-xl-8">
+  <!-- عنوان وقائمة الإجراءات -->
+  <div class="title d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-3">Recent Shipments</h5>
+    <button 
+      type="button" 
+      class="btn btn-primary d-flex align-items-center gap-1"
+      data-bs-toggle="modal" 
+      data-bs-target="#addShipmentModal">
+      <i class="bi bi-plus-lg"></i> Add Shipment
+    </button>
+  </div>
 
-  <div class="col-md-12 col-xl-8">
-    <div class="title d-flex justify-content-between align-items-center mb-3">
-  <h5 class="mb-3">Recent Shipments</h5>
-
-  <button 
-    type="button" 
-    class="btn btn-primary d-flex align-items-center gap-1"
-    data-bs-toggle="modal" 
-    data-bs-target="#addShipmentModal">
-    <i class="bi bi-plus-lg"></i> Add Shipment
-  </button>
-
-
-    </div>
-    <div class="card tbl-card">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-            <tr>
-              <th>Tracking Number</th>
-              <th>Shipment Type</th>
-              <th>Shipment Status</th>
-              <th class="text-end">Weight (kg)</th>
-              <th class="text-end">Shipping Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (order of recentOrder; track order) {
-              <tr>
-                <td>
-                  <a href="javascript:" class="text-muted">{{ order.id }}</a>
-                </td>
-                <td>{{ order.name }}</td>
-                <td>
-                  <span class="d-block">
-                    <i class="badge-circle {{ order.status_type }} f-10 m-r-5"></i>
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td class="text-end">{{ order.quantity }}</td>
-                <td class="text-end">{{ order.amount }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+  <!-- جدول الشحنات الأخيرة -->
+  <div class="card tbl-card">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Tracking Number</th>
+            <th>Shipment Type</th>
+            <th>Shipment Status</th>
+            <th class="text-end">Weight (kg)</th>
+            <th class="text-end">CBM</th>
+            <th class="text-end">Shipping Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrder; trackBy: trackById">
+            <td>{{ order.shipment_number }}</td>
+            <td>{{ order.shipment_type | titlecase }}</td>
+            <td>{{ order.shipment_status | titlecase }}</td>
+            <td class="text-end">{{ order.total_weight ?? '-' }}</td>
+            <td class="text-end">{{ order.total_cbm ?? '-' }}</td>
+            <td class="text-end">{{ formatMoney(order.total_cost) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
+</div>
+
+<!-- مودال إضافة شحنة -->
+<div class="modal fade" id="addShipmentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form #shipmentForm="ngForm" (ngSubmit)="addShipment(shipmentForm)" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Shipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- رقم الشحنة -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Number</label>
+            <input 
+              type="text" 
+              name="shipment_number" 
+              [(ngModel)]="newShipment.shipment_number" 
+              required 
+              class="form-control">
+          </div>
+
+          <!-- نوع الشحنة -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Type</label>
+            <select 
+              name="shipment_type" 
+              [(ngModel)]="newShipment.shipment_type" 
+              required 
+              class="form-select">
+              <option value="sea">Sea</option>
+              <option value="air">Air</option>
+            </select>
+          </div>
+
+          <!-- الحالة -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Status</label>
+            <select 
+              name="shipment_status" 
+              [(ngModel)]="newShipment.shipment_status" 
+              required 
+              class="form-select">
+              <option value="pending">Pending</option>
+              <option value="shipped">Shipped</option>
+              <option value="received_in_china">Received in China</option>
+            </select>
+          </div>
+
+          <!-- تاريخ الوصول المتوقع -->
+          <div class="mb-3">
+            <label class="form-label">Expected Arrival Date</label>
+            <input 
+              type="date" 
+              name="expected_arrival_date" 
+              [(ngModel)]="newShipment.expected_arrival_date" 
+              required 
+              class="form-control">
+          </div>
+
+          <!-- الشحن البحري: CBM -->
+          <div class="mb-3" *ngIf="newShipment.shipment_type === 'sea'">
+            <label class="form-label">Total CBM</label>
+            <input 
+              type="number" 
+              name="total_cbm" 
+              [(ngModel)]="newShipment.total_cbm" 
+              min="0" 
+              step="0.01" 
+              class="form-control">
+          </div>
+
+          <!-- الشحن الجوي: الوزن -->
+          <div class="mb-3" *ngIf="newShipment.shipment_type === 'air'">
+            <label class="form-label">Total Weight (kg)</label>
+            <input 
+              type="number" 
+              name="total_weight" 
+              [(ngModel)]="newShipment.total_weight" 
+              min="0" 
+              step="0.01" 
+              class="form-control">
+          </div>
+
+          <!-- عدد الكراتين -->
+          <div class="mb-3">
+            <label class="form-label">Total Cartons</label>
+            <input 
+              type="number" 
+              name="total_cartons" 
+              [(ngModel)]="newShipment.total_cartons" 
+              min="0" 
+              class="form-control">
+          </div>
+
+          <!-- التكلفة -->
+          <div class="mb-3">
+            <label class="form-label">Total Cost</label>
+            <input 
+              type="number" 
+              name="total_cost" 
+              [(ngModel)]="newShipment.total_cost" 
+              min="0" 
+              step="0.01" 
+              class="form-control">
+          </div>
+
+          <!-- رسائل الخطأ -->
+          <div *ngIf="addError" class="alert alert-danger">
+            {{ addError }}
+          </div>
+          <div *ngIf="addSuccess" class="alert alert-success">
+            {{ addSuccess }}
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" [disabled]="adding">
+            {{ adding ? 'Adding...' : 'Add Shipment' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Shipment Modal -->
+<div class="modal fade" id="addShipmentModal" tabindex="-1" aria-labelledby="addShipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #shipmentForm="ngForm" (ngSubmit)="addShipment(shipmentForm)" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addShipmentModalLabel">Add Shipment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Shipment Number -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Number</label>
+            <input
+              type="text"
+              class="form-control"
+              name="shipment_number"
+              [(ngModel)]="newShipment.shipment_number"
+              required
+            />
+          </div>
+
+          <!-- Shipment Type -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Type</label>
+            <select class="form-select" name="shipment_type" [(ngModel)]="newShipment.shipment_type" required>
+              <option value="sea">Sea</option>
+              <option value="air">Air</option>
+            </select>
+          </div>
+
+          <!-- Shipment Status -->
+          <div class="mb-3">
+            <label class="form-label">Shipment Status</label>
+            <select class="form-select" name="shipment_status" [(ngModel)]="newShipment.shipment_status" required>
+              <option value="pending">Pending</option>
+              <option value="shipped">Shipped</option>
+              <option value="received_in_china">Received in China</option>
+            </select>
+          </div>
+
+          <!-- Expected Arrival Date -->
+          <div class="mb-3">
+            <label class="form-label">Expected Arrival Date</label>
+            <input
+              type="date"
+              class="form-control"
+              name="expected_arrival_date"
+              [(ngModel)]="newShipment.expected_arrival_date"
+            />
+          </div>
+
+          <!-- Total Cartons -->
+          <div class="mb-3">
+            <label class="form-label">Total Cartons</label>
+            <input type="number" class="form-control" name="total_cartons" [(ngModel)]="newShipment.total_cartons" min="0"/>
+          </div>
+
+          <!-- Total Cost -->
+          <div class="mb-3">
+            <label class="form-label">Total Cost</label>
+            <input type="number" class="form-control" name="total_cost" [(ngModel)]="newShipment.total_cost" min="0" step="0.01"/>
+          </div>
+
+          <!-- Total CBM -->
+          <div class="mb-3">
+            <label class="form-label">Total CBM</label>
+            <input type="number" class="form-control" name="total_cbm" [(ngModel)]="newShipment.total_cbm" min="0" step="0.01"/>
+          </div>
+
+          <!-- Total Weight -->
+          <div class="mb-3">
+            <label class="form-label">Total Weight (kg)</label>
+            <input type="number" class="form-control" name="total_weight" [(ngModel)]="newShipment.total_weight" min="0" step="0.01"/>
+          </div>
+
+          <div *ngIf="addError" class="alert alert-danger">{{ addError }}</div>
+          <div *ngIf="addSuccess" class="alert alert-success">{{ addSuccess }}</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" [disabled]="adding || shipmentForm.invalid">
+            {{ adding ? 'Adding...' : 'Add Shipment' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
   <div class="col-md-12 col-xl-4">
     <app-analytics-chart />
   </div>
