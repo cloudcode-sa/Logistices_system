@@ -5,15 +5,23 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/service/auth-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 import { supabase } from 'src/app/supabase.config';
+import { LanguageService } from 'src/app/service/language-service';
 @Component({
   selector: 'app-auth-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, SpinnerComponent], // <--- مهم جدًا
+  imports: [CommonModule, FormsModule, SpinnerComponent], 
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.scss']
 })
 export class AuthLoginComponent implements OnInit {
+  languageService = inject(LanguageService);
+ toggleLanguage() {
+    this.languageService.toggleLanguage();
+  }
 
+  get currentLang() {
+    return this.languageService.currentLang();
+  }
   ngOnInit(): void {
     // مثال لفحص session / user — Supabase JS v2
 (async () => {

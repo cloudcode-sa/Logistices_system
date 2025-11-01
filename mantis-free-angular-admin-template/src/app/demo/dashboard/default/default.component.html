@@ -1,12 +1,8 @@
 <div class="row">
-
-
   <div class="container-fluid py-4 add-shipment-page">
   <div class=" mb-4">
     <h4 class="fw-bold">Add Shipment</h4>
-
   </div>
-
   <div class="card shadow-sm border-0 rounded-4 p-4 animate__animated animate__fadeInUp">
     <h5 class="fw-semibold mb-4 border-bottom pb-3">Shipment Details</h5>
 
@@ -128,252 +124,137 @@
   </div>
 </div>
 
- 
 
-  <div class="card tbl-card">
-    <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle">
-        <thead>
-          <tr>
-            <th>Tracking Number</th>
-            <th>Shipment Type</th>
-            <th>Shipment Status</th>
-            <th>Date</th>
-            <th class="text-end">CBM (Sea)</th>
-            <th class="text-end">Weight (Air)</th>
-            <th class="text-end">Shipping Cost</th>
-          </tr>
-        </thead>
+<table class="table table-hover mb-0 align-middle">
+  <thead>
+    <tr>
+      <th>Tracking Number</th>
+      <th>Shipment Type</th>
+      <th>Shipment Status</th>
+      <th>Date</th>
+      <th class="text-end">CBM (Sea)</th>
+      <th class="text-end">Weight (Air)</th>
+      <th class="text-end">Shipping Cost</th>
+      <th class="text-center">Actions</th> <!-- new -->
+    </tr>
+  </thead>
 
-        <tbody>
-          @for (shipment of recentOrder; track shipment) {
-            <tr>
-              <!-- Tracking number -->
-              <td>
-                <a href="javascript:" class="text-muted fw-semibold">
-                  {{ shipment.shipment_number || '-' }}
-                </a>
-              </td>
+  <tbody>
+    @for (shipment of recentOrder; track shipment) {
+      <tr>
+        <!-- existing columns... -->
+        <td>
+          <a href="javascript:" class="text-muted fw-semibold">
+            {{ shipment.shipment_number || '-' }}
+          </a>
+        </td>
+        <td class="text-capitalize">
+          <i class="bi me-1"
+             [ngClass]="{
+               'bi-airplane': shipment.shipment_type === 'air',
+               'bi-truck': shipment.shipment_type === 'sea'
+             }"></i>
+          {{ shipment.shipment_type }}
+        </td>
+    <td class="status-td">
+  <div class="d-flex align-items-center gap-2">
+    <!-- البادج (الحالة الحالية) -->
+    <span class="badge px-3 py-2"
+          [ngClass]="{
+            'bg-warning text-dark': shipment.shipment_status === 'pending',
+            'bg-info text-dark': shipment.shipment_status === 'shipped',
+            'bg-success text-dark': shipment.shipment_status === 'received_in_china'
+          }">
+      {{ shipment.shipment_status.replaceAll('_', ' ') }}
+    </span>
 
-              <!-- Shipment Type -->
-              <td class="text-capitalize">
-                <i
-                  class="bi me-1"
-                  [ngClass]="{
-                    'bi-airplane': shipment.shipment_type === 'air',
-                    'bi-truck': shipment.shipment_type === 'sea'
-                  }"
-                ></i>
-                {{ shipment.shipment_type }}
-              </td>
-
-              <!-- Shipment Status -->
-              <td>
-                <span
-                  class="badge px-3 py-2"
-                  [ngClass]="{
-                    'bg-warning text-dark': shipment.shipment_status === 'pending',
-                    'bg-info text-dark': shipment.shipment_status === 'shipped',
-                    'bg-success': shipment.shipment_status === 'received_in_china'
-                  }"
-                >
-                  {{ shipment.shipment_status.replaceAll('_', ' ') }}
-                </span>
-              </td>
-
-              <!-- Date column -->
-              <td>
-                <span class="text-muted">
-                  {{
-                    shipment.expected_arrival_date
-                      ? (shipment.expected_arrival_date | date: 'mediumDate')
-                      : (shipment.created_at | date: 'mediumDate')
-                  }}
-                </span>
-              </td>
-
-              <!-- CBM (Sea only) -->
-              <td class="text-end">
-                <span *ngIf="shipment.shipment_type === 'sea'; else noSeaData">
-                  {{ shipment.total_cbm ? shipment.total_cbm + ' cbm' : '-' }}
-                </span>
-                <ng-template #noSeaData> - </ng-template>
-              </td>
-
-              <!-- Weight (Air only) -->
-              <td class="text-end">
-                <span *ngIf="shipment.shipment_type === 'air'; else noAirData">
-                  {{ shipment.total_weight ? shipment.total_weight + ' kg' : '-' }}
-                </span>
-                <ng-template #noAirData> - </ng-template>
-              </td>
-
-              <!-- Cost -->
-              <td class="text-end">
-                {{ formatMoney(shipment.total_cost) }}
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="7" class="text-center text-muted py-3">
-                No shipments found.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <!-- زر فتح المودال -->
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary"
+            (click)="openStatusModal(shipment); $event.stopPropagation()"
+            [disabled]="updatingStatusId === shipment.id"
+            title="تعديل الحالة">
+      <ng-container *ngIf="updatingStatusId !== shipment.id">
+        <i class="fa-solid fa-pen-to-square"></i>
+      </ng-container>
+      <ng-container *ngIf="updatingStatusId === shipment.id">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </ng-container>
+    </button>
   </div>
+</td>
+
+        
+        <td>
+          <span class="text-muted">
+            {{
+              shipment.expected_arrival_date
+                ? (shipment.expected_arrival_date | date: 'mediumDate')
+                : (shipment.created_at | date: 'mediumDate')
+            }}
+          </span>
+        </td>
+        <td class="text-end">
+          <span *ngIf="shipment.shipment_type === 'sea'; else noSeaData">
+            {{ shipment.total_cbm ? shipment.total_cbm + ' cbm' : '-' }}
+          </span>
+          <ng-template #noSeaData> - </ng-template>
+        </td>
+        <td class="text-end">
+          <span *ngIf="shipment.shipment_type === 'air'; else noAirData">
+            {{ shipment.total_weight ? shipment.total_weight + ' kg' : '-' }}
+          </span>
+          <ng-template #noAirData> - </ng-template>
+        </td>
+        <td class="text-end">
+          {{ formatMoney(shipment.total_cost) }}
+        </td>
+
+        <!-- Actions column -->
+<td class="text-center d-flex justify-content-center gap-2">
+  <!-- زر Delete -->
+  <button
+    class="btn btn-sm btn-danger"
+    (click)="deleteShipment(shipment)"
+    [disabled]="deletingId === shipment.id"
+    title="Delete">
+    <ng-container *ngIf="deletingId !== shipment.id">
+      <i class="fa-solid fa-trash"></i>
+    </ng-container>
+    <ng-container *ngIf="deletingId === shipment.id">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      جاري الحذف...
+    </ng-container>
+  </button>
+
+  <!-- زر Update -->
+  <button
+    class="btn btn-sm btn-secondary"
+    (click)="openEdit(shipment)"
+    [disabled]="updatingId === shipment.id">
+    <ng-container *ngIf="updatingId !== shipment.id">
+      <i class="fa-solid fa-pen-to-square"></i>
+    </ng-container>
+    <ng-container *ngIf="updatingId === shipment.id">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      جاري الحفظ...
+    </ng-container>
+  </button>
+</td>
+
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="8" class="text-center text-muted py-3">
+          No shipments found.
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
 
 
 
-<!-- Add Shipment Modal -->
-<!-- Modal Add Shipment -->
-<div
-  class="modal fade"
-  id="addShipmentModal"
-  tabindex="-1"
-  aria-labelledby="addShipmentModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form #shipmentForm="ngForm" (ngSubmit)="addShipment(shipmentForm)" novalidate>
-        <div class="modal-header">
-          <h5 class="modal-title" id="addShipmentModalLabel">Add Shipment</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <!-- Shipment Number -->
-          <div class="mb-3">
-            <label class="form-label">Shipment Number</label>
-            <input
-              type="text"
-              class="form-control"
-              name="shipment_number"
-              [(ngModel)]="newShipment.shipment_number"
-              required />
-          </div>
-
-          <!-- Shipment Type -->
-          <div class="mb-3">
-            <label class="form-label">Shipment Type</label>
-            <select
-              class="form-select"
-              name="shipment_type"
-              [(ngModel)]="newShipment.shipment_type"
-              required>
-              <option value="" disabled selected>Select type</option>
-              <option value="sea">Sea</option>
-              <option value="air">Air</option>
-            </select>
-          </div>
-
-          <!-- Shipment Status -->
-          <div class="mb-3">
-            <label class="form-label">Shipment Status</label>
-            <select
-              class="form-select"
-              name="shipment_status"
-              [(ngModel)]="newShipment.shipment_status"
-              required>
-              <option value="pending">Pending</option>
-              <option value="shipped">Shipped</option>
-              <option value="received_in_china">Received in China</option>
-            </select>
-          </div>
-
-          <!-- Expected Arrival -->
-          <div class="mb-3">
-            <label class="form-label">Expected Arrival Date</label>
-            <input
-              type="date"
-              class="form-control"
-              name="expected_arrival_date"
-              [(ngModel)]="newShipment.expected_arrival_date" />
-          </div>
-
-          <!-- ✅ Fields visible only for SEA -->
-          <div *ngIf="newShipment.shipment_type === 'sea'">
-            <div class="mb-3">
-              <label class="form-label">Total Cartons</label>
-              <input
-                type="number"
-                class="form-control"
-                name="total_cartons"
-                [(ngModel)]="newShipment.total_cartons"
-                min="0" />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Total CBM</label>
-              <input
-                type="number"
-                class="form-control"
-                name="total_cbm"
-                [(ngModel)]="newShipment.total_cbm"
-                min="0"
-                step="0.01" />
-            </div>
-          </div>
-
-          <!-- ✅ Fields visible only for AIR -->
-          <div *ngIf="newShipment.shipment_type === 'air'">
-            <div class="mb-3">
-              <label class="form-label">Total Weight (kg)</label>
-              <input
-                type="number"
-                class="form-control"
-                name="total_weight"
-                [(ngModel)]="newShipment.total_weight"
-                min="0"
-                step="0.01" />
-            </div>
-          </div>
-
-          <!-- Common field -->
-          <div class="mb-3">
-            <label class="form-label">Total Cost</label>
-            <input
-              type="number"
-              class="form-control"
-              name="total_cost"
-              [(ngModel)]="newShipment.total_cost"
-              min="0"
-              step="0.01" />
-          </div>
-
-          <!-- Alerts -->
-          <div *ngIf="addError" class="alert alert-danger">
-            {{ addError }}
-          </div>
-          <div *ngIf="addSuccess" class="alert alert-success">
-            {{ addSuccess }}
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal">
-            Close
-          </button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="adding || shipmentForm.invalid">
-            {{ adding ? 'Adding...' : 'Add Shipment' }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <!-- 
   <div class="col-md-12 col-xl-4">
@@ -431,3 +312,138 @@
   </div> -->
 <!-- </div> -->
 <!-- Add Shipment Modal -->
+<!-- Edit Shipment Modal -->
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEdit()"></div>
+
+<div class="custom-modal" *ngIf="showEditModal" role="dialog" aria-modal="true" aria-labelledby="editShipmentTitle">
+  <div class="modal-card">
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h5 id="editShipmentTitle" class="mb-0">تعديل الشحنة</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeEdit()"></button>
+    </div>
+
+    <form #editForm="ngForm" (ngSubmit)="saveEdit(editForm)" novalidate>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-medium">Shipment Number</label>
+            <input name="shipment_number" class="form-control"
+                   [(ngModel)]="editingShipment.shipment_number"
+                   required />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Shipment Type</label>
+            <select name="shipment_type" class="form-select"
+                    [(ngModel)]="editingShipment.shipment_type" required>
+              <option value="sea">Sea</option>
+              <option value="air">Air</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Shipment Status</label>
+            <select name="shipment_status" class="form-select"
+                    [(ngModel)]="editingShipment.shipment_status" required>
+              <option value="pending">Pending</option>
+              <option value="shipped">Shipped</option>
+              <option value="received_in_china">Received in China</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Expected Arrival Date</label>
+            <input type="date" name="expected_arrival_date" class="form-control"
+                   [(ngModel)]="editingShipment.expected_arrival_date" />
+          </div>
+
+          <!-- Sea fields -->
+          <div class="col-md-6" *ngIf="editingShipment.shipment_type === 'sea'">
+            <label class="form-label fw-medium">Total Cartons</label>
+            <input type="number" name="total_cartons" class="form-control"
+                   [(ngModel)]="editingShipment.total_cartons" min="0" />
+          </div>
+
+          <div class="col-md-6" *ngIf="editingShipment.shipment_type === 'sea'">
+            <label class="form-label fw-medium">Total CBM</label>
+            <input type="number" name="total_cbm" class="form-control"
+                   [(ngModel)]="editingShipment.total_cbm" min="0" step="0.01" />
+          </div>
+
+          <!-- Air fields -->
+          <div class="col-md-6" *ngIf="editingShipment.shipment_type === 'air'">
+            <label class="form-label fw-medium">Total Weight (kg)</label>
+            <input type="number" name="total_weight" class="form-control"
+                   [(ngModel)]="editingShipment.total_weight" min="0" step="0.01" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Total Cost</label>
+            <input type="number" name="total_cost" class="form-control"
+                   [(ngModel)]="editingShipment.total_cost" min="0" step="0.01" />
+          </div>
+
+          <div class="col-12">
+            <div *ngIf="addError" class="alert alert-danger">{{ addError }}</div>
+            <div *ngIf="addSuccess" class="alert alert-success">{{ addSuccess }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeEdit()" [disabled]="editingSaving">إلغاء</button>
+        <button type="submit" class="btn btn-primary" [disabled]="editingSaving || editForm.invalid">
+          <ng-container *ngIf="!editingSaving">حفظ التعديلات</ng-container>
+          <ng-container *ngIf="editingSaving">
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>جاري الحفظ...
+          </ng-container>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Status Edit Modal -->
+<div class="modal-backdrop" *ngIf="statusModalVisible" (click)="closeStatusModal()"></div>
+
+<div class="custom-modal" *ngIf="statusModalVisible" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">تعديل حالة الشحنة</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="closeStatusModal()"></button>
+    </div>
+
+    <form (ngSubmit)="confirmStatusUpdate()" #statusForm="ngForm" novalidate>
+      <div class="modal-body">
+        <p class="mb-2">الشحنة: <strong>{{ modalShipment?.shipment_number || modalShipment?.id }}</strong></p>
+
+        <div class="list-group">
+          <label class="list-group-item" *ngFor="let s of statusOptions">
+            <input type="radio"
+                   name="statusOption"
+                   [value]="s.key"
+                   [(ngModel)]="modalSelectedStatus"
+                   [disabled]="modalSaving" />
+            <span class="ms-2">{{ s.label }}</span>
+            <small class="text-muted ms-2" *ngIf="modalShipment?.shipment_status === s.key"> (الحالي)</small>
+          </label>
+        </div>
+
+        <div *ngIf="addError" class="alert alert-danger mt-2">{{ addError }}</div>
+        <div *ngIf="addSuccess" class="alert alert-success mt-2">{{ addSuccess }}</div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeStatusModal()" [disabled]="modalSaving">إلغاء</button>
+
+        <button type="submit" class="btn btn-primary"
+                [disabled]="modalSaving || !modalSelectedStatus || modalSelectedStatus === modalShipment?.shipment_status">
+          <ng-container *ngIf="!modalSaving">حفظ التعديل</ng-container>
+          <ng-container *ngIf="modalSaving">
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            جاري الحفظ...
+          </ng-container>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

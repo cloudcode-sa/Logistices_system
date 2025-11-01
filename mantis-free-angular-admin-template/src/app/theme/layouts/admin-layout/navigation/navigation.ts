@@ -27,13 +27,14 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'default',
-        title: 'Home',
+        title: 'Add Shipment',
         type: 'item',
         classes: 'nav-item',
         url: '/dashboard/default',
         icon: 'dashboard',
         breadcrumbs: false
-      }
+      },
+    
     ]
   },
  

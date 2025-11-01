@@ -5,67 +5,92 @@
     <div class="auth-form">
       <div class="auth-header text-center">
         <img src="assets/images/logo.png" width="100px" alt="theme-logo" class="logo logo-dark logo-lg" />
+       <ul class="nav">
+  <li class="nav-item">
+    <button
+      class="btn btn-sm lang-btn"
+      [class.active]="currentLang === 'ar'"
+      (click)="toggleLanguage()"
+      type="button"
+    >
+      <i class="bi bi-globe"></i>
+      {{ currentLang === 'en' ? 'العربية' : 'English' }}
+    </button>
+  </li>
+</ul>
+
       </div>
 
       <div class="card my-5">
-        <div class="card-body">
-          <h3 class="mb-4 text-center"><b>تسجيل الدخول</b></h3>
+  <div class="card-body">
+    <h3 class="mb-4 text-center"><b>{{ currentLang === 'en' ? 'Login' : 'تسجيل الدخول' }}</b></h3>
 
-          <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
-            <!-- البريد الإلكتروني -->
-            <div class="form-group mb-3">
-              <label for="email">البريد الإلكتروني</label>
-              <input
-                type="email"
-                id="email"
-                [(ngModel)]="email"
-                name="email"
-                required
-                email
-                #emailRef="ngModel"
-                class="form-control"
-                placeholder="أدخل بريدك الإلكتروني"
-              />
-              <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)" class="invalid-feedback d-block">
-                <small *ngIf="emailRef.errors?.['required']">البريد الإلكتروني مطلوب</small>
-                <small *ngIf="emailRef.errors?.['email']">البريد الإلكتروني غير صالح</small>
-              </div>
-            </div>
-
-            <!-- كلمة المرور -->
-            <div class="form-group mb-3">
-              <label for="password">كلمة المرور</label>
-              <input
-                type="password"
-                id="password"
-                [(ngModel)]="password"
-                name="password"
-                required
-                minlength="6"
-                #passwordRef="ngModel"
-                class="form-control"
-                placeholder="أدخل كلمة المرور"
-              />
-              <div *ngIf="passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)" class="invalid-feedback d-block">
-                <small *ngIf="passwordRef.errors?.['required']">كلمة المرور مطلوبة</small>
-                <small *ngIf="passwordRef.errors?.['minlength']">كلمة المرور لا تقل عن 6 أحرف</small>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-              [disabled]="loading || loginForm.invalid"
-            >
-              {{ loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول' }}
-            </button>
-
-            <div *ngIf="error" class="alert alert-danger mt-3">
-              {{ error }}
-            </div>
-          </form>
+    <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
+      <!-- البريد الإلكتروني -->
+      <div class="form-group mb-3">
+        <label for="email">{{ currentLang === 'en' ? 'Email' : 'البريد الإلكتروني' }}</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          email
+          #emailRef="ngModel"
+          class="form-control"
+          [placeholder]="currentLang === 'en' ? 'Enter your email' : 'أدخل بريدك الإلكتروني'"
+        />
+        <div *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched)" class="invalid-feedback d-block">
+          <small *ngIf="emailRef.errors?.['required']">
+            {{ currentLang === 'en' ? 'Email is required' : 'البريد الإلكتروني مطلوب' }}
+          </small>
+          <small *ngIf="emailRef.errors?.['email']">
+            {{ currentLang === 'en' ? 'Invalid email' : 'البريد الإلكتروني غير صالح' }}
+          </small>
         </div>
       </div>
+
+      <!-- كلمة المرور -->
+      <div class="form-group mb-3">
+        <label for="password">{{ currentLang === 'en' ? 'Password' : 'كلمة المرور' }}</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          minlength="6"
+          #passwordRef="ngModel"
+          class="form-control"
+          [placeholder]="currentLang === 'en' ? 'Enter your password' : 'أدخل كلمة المرور'"
+        />
+        <div *ngIf="passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)" class="invalid-feedback d-block">
+          <small *ngIf="passwordRef.errors?.['required']">
+            {{ currentLang === 'en' ? 'Password is required' : 'كلمة المرور مطلوبة' }}
+          </small>
+          <small *ngIf="passwordRef.errors?.['minlength']">
+            {{ currentLang === 'en' ? 'Password must be at least 6 characters' : 'كلمة المرور لا تقل عن 6 أحرف' }}
+          </small>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="loading || loginForm.invalid"
+      >
+        {{ loading 
+            ? (currentLang === 'en' ? 'Logging in...' : 'جاري تسجيل الدخول...') 
+            : (currentLang === 'en' ? 'Login' : 'تسجيل الدخول') }}
+      </button>
+
+      <div *ngIf="error" class="alert alert-danger mt-3">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>
+
 
       <div class="auth-footer row">
         <div class="col my-1">
