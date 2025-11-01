@@ -1,27 +1,44 @@
-// project import
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from 'src/app/service/auth-service';
+import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
 @Component({
   selector: 'app-auth-login',
-  imports: [RouterModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, SpinnerComponent], // <--- مهم جدًا
   templateUrl: './auth-login.component.html',
-  styleUrl: './auth-login.component.scss'
+  styleUrls: ['./auth-login.component.scss']
 })
 export class AuthLoginComponent {
-  // public method
-  SignInOptions = [
-    {
-      image: 'assets/images/authentication/google.svg',
-      name: 'Google'
-    },
-    {
-      image: 'assets/images/authentication/twitter.svg',
-      name: 'Twitter'
-    },
-    {
-      image: 'assets/images/authentication/facebook.svg',
-      name: 'Facebook'
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
+  email = '';
+  password = '';
+  loading = false;
+  error: string | null = null;
+
+  constructor() {
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.router.navigate(['/dashboard/default']);
+      }
+    });
+  }
+
+  async login() {
+    this.error = null;
+    this.loading = true;
+    try {
+      await this.auth.signIn(this.email, this.password);
+      await this.router.navigate(['/dashboard/default']);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      this.error = err?.message || 'فشل تسجيل الدخول. تأكد من البيانات.';
+    } finally {
+      this.loading = false;
     }
-  ];
+  }
 }

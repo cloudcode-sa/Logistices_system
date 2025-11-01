@@ -28,6 +28,7 @@
     "@ant-design/icons-angular": "20.0.0",
     "@ng-bootstrap/ng-bootstrap": "19.0.0",
     "@popperjs/core": "2.11.8",
+    "@supabase/supabase-js": "^2.78.0",
     "apexcharts": "4.7.0",
     "boostrap": "^2.0.0",
     "bootstrap": "5.3.7",

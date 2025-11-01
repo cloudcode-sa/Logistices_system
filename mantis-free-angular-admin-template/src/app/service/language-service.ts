@@ -18,6 +18,8 @@ export class LanguageService {
       'nav.services': 'Services',
       'nav.contact': 'Contact',
       'nav.login': 'login',
+      'nav.Dashboard': 'Dashboard',
+
 
       
       // Hero Section
@@ -96,6 +98,7 @@ export class LanguageService {
       'nav.services': 'الخدمات',
       'nav.contact': 'اتصل بنا',
       'nav.login': 'تسجيل الدخول',
+      'nav.Dashboard': 'لوحة التحكم',
 
       
       // Hero Section
