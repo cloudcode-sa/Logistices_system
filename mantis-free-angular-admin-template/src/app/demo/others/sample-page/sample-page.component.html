@@ -88,7 +88,113 @@
     </svg>
   </div>
 </section>
+<div class="shipment-tracker container py-5">
+  <h2 class="text-center mb-4 fw-bold text-gradient">{{ currentLang === 'en' ? 'Track Your Shipment' : 'تتبع شحنتك' }}</h2>
 
+  <!-- Search Box -->
+ <div class="search-box mx-auto mb-5">
+    <form (ngSubmit)="searchShipment()" class="d-flex align-items-center">
+      <input
+        type="text"
+        class="form-control"
+        [placeholder]="
+          currentLang === 'en'
+            ? 'Enter your shipment number...'
+            : 'أدخل رقم الشحنة...'
+        "
+        [(ngModel)]="searchTerm"
+        name="search"
+        required
+      />
+      <button class="btn btn-primary ms-2" type="submit">
+        {{ currentLang === 'en' ? 'Search' : 'بحث' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Result Card -->
+  <div *ngIf="searchResult" class="shipment-card mx-auto">
+    <div class="shipment-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="fw-bold mb-1">
+          {{ currentLang === 'en' ? 'Shipment #' : 'رقم الشحنة #' }}
+          {{ searchResult.shipment_number }}
+        </h5>
+        <p class="text-muted mb-0">
+          {{ currentLang === 'en' ? 'Type:' : 'النوع:' }}
+          <strong class="text-capitalize">{{ searchResult.shipment_type }}</strong>
+        </p>
+      </div>
+      <span
+        class="badge status-badge"
+        [ngClass]="{
+          'bg-warning text-dark': searchResult.shipment_status === 'pending',
+          'bg-info text-dark': searchResult.shipment_status === 'shipped',
+          'bg-success': searchResult.shipment_status === 'received_in_china'
+        }"
+      >
+        {{
+          
+             searchResult.shipment_status.replaceAll('_', ' ')
+          
+        }}
+      </span>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="shipment-progress mt-4">
+      <div class="progress-line">
+        <div
+          class="progress-fill"
+          [ngClass]="searchResult.shipment_status"
+          [style.width]="getProgressWidth(searchResult.shipment_status)"
+        ></div>
+      </div>
+
+      <div class="progress-steps d-flex justify-content-between mt-3">
+        <div class="step" [ngClass]="{ active: searchResult.shipment_status === 'pending' }">
+          <i class="bi bi-hourglass-split"></i>
+          <span>{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</span>
+        </div>
+
+        <div class="step" [ngClass]="{
+  active:
+    searchResult.shipment_status === 'shipped' ||
+    searchResult.shipment_status === 'تم الشحن'
+}">
+          <i class="bi bi-truck"></i>
+          <span>{{ currentLang === 'en' ? 'Shipped' : 'تم الشحن' }}</span>
+        </div>
+
+        <div
+          class="step"
+          [ngClass]="{ active: searchResult.shipment_status === 'received_in_china' }"
+        >
+          <i class="bi bi-building"></i>
+          <span>{{ currentLang === 'en' ? 'Received in China' : 'تم الاستلام في الصين' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Result -->
+  <div *ngIf="searchAttempted && !searchResult" class="text-center mt-4 text-muted">
+    <i class="bi bi-emoji-frown fs-2"></i>
+    <p class="mt-2">
+      {{
+        currentLang === 'en'
+          ? 'No shipment found for'
+          : 'لم يتم العثور على شحنة للرقم'
+      }}
+      "<strong>{{ searchTerm }}</strong>"
+    </p>
+  </div>
+</div>
+
+
+
+
+ 
 <!-- About Section -->
 <section id="about" class="py-5 bg-white" style="scroll-margin-top: 80px;">
   <div class="container">
