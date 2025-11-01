@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/service/auth-service';
 import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinner.component';
+import { supabase } from 'src/app/supabase.config';
 @Component({
   selector: 'app-auth-login',
   standalone: true,
@@ -11,7 +12,21 @@ import { SpinnerComponent } from 'src/app/theme/shared/components/spinner/spinne
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.scss']
 })
-export class AuthLoginComponent {
+export class AuthLoginComponent implements OnInit {
+
+  ngOnInit(): void {
+    // مثال لفحص session / user — Supabase JS v2
+(async () => {
+  const sessionRes = await supabase.auth.getSession();
+  console.log('supabase.auth.getSession():', sessionRes);
+
+  const userRes = await supabase.auth.getUser();
+  console.log('supabase.auth.getUser():', userRes);
+
+  // أيضاً افحص الـ headers في حالة أردت
+})();
+
+  }
   private auth = inject(AuthService);
   private router = inject(Router);
 
