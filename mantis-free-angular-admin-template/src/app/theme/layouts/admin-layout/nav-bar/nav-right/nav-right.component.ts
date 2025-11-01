@@ -1,6 +1,6 @@
 // angular import
 import { Component, inject, input, output } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // project import
 
@@ -27,6 +27,8 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/service/auth-service';
 
 @Component({
   selector: 'app-nav-right',
@@ -35,6 +37,20 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
   styleUrls: ['./nav-right.component.scss']
 })
 export class NavRightComponent {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user$: Observable<any | null> = this.auth.user$;
+
+  async logout() {
+    try {
+      await this.auth.signOut(); 
+      await this.router.navigate(['/login']); 
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
+  }
   private iconService = inject(IconService);
 
   styleSelectorToggle = input<boolean>();
