@@ -15,6 +15,7 @@ const routes: Routes = [
         (c) => c.SamplePageComponent
       )
   },
+ 
 
 
   // ✅ لو عايز الداشبورد والصفحات التانية
@@ -29,13 +30,13 @@ const routes: Routes = [
             (c) => c.DefaultComponent
           )
       },
-       {
-  path: 'dashboard/default/shipment-details', // بدون dashboard/ لأن غالباً هذا تحت route الأم dashboard
-  loadComponent: () =>
-    import('./demo/dashboard/default/shipment-details/shipment-details').then(
-      (c) => c.ShipmentDetails
-    )
-},
+ {
+    path: 'dashboard/ShipmentDetails',
+    loadComponent: () =>
+      import('./demo/dashboard/shipment-details/shipment-details').then(
+        (c) => c.ShipmentDetails
+      )
+  },
 
       {
         path: 'typography',

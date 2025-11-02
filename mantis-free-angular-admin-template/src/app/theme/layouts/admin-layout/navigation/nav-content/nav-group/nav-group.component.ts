@@ -7,10 +7,11 @@ import { NavigationItem } from '../../navigation';
 
 import { NavCollapseComponent } from '../nav-collapse/nav-collapse.component';
 import { NavItemComponent } from '../nav-item/nav-item.component';
+import { Dir } from "@angular/cdk/bidi";
 
 @Component({
   selector: 'app-nav-group',
-  imports: [CommonModule, NavCollapseComponent, NavItemComponent],
+  imports: [CommonModule, NavCollapseComponent, NavItemComponent, Dir],
   templateUrl: './nav-group.component.html',
   styleUrls: ['./nav-group.component.scss']
 })

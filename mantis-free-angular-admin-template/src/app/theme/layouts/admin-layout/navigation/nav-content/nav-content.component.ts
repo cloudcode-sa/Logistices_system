@@ -23,10 +23,11 @@ import {
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { Dir } from "@angular/cdk/bidi";
 
 @Component({
   selector: 'app-nav-content',
-  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule],
+  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule, Dir],
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss']
 })
@@ -67,7 +68,7 @@ export class NavContentComponent implements OnInit {
 
   // Life cycle events
   ngOnInit() {
-    if (this.windowWidth < 1025) {
+    if (this.windowWidth  -1025) {
       (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
     }
   }

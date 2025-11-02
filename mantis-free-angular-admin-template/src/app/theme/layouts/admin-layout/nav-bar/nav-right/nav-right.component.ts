@@ -29,6 +29,7 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/service/auth-service';
+import { LanguageService } from 'src/app/service/language-service';
 
 @Component({
   selector: 'app-nav-right',
@@ -39,6 +40,14 @@ import { AuthService } from 'src/app/service/auth-service';
 export class NavRightComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+   languageService = inject(LanguageService);
+   toggleLanguage() {
+      this.languageService.toggleLanguage();
+    }
+  
+    get currentLang() {
+      return this.languageService.currentLang();
+    }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user$: Observable<any | null> = this.auth.user$;

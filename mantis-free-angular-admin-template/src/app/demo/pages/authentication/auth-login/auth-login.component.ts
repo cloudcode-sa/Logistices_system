@@ -44,11 +44,7 @@ export class AuthLoginComponent implements OnInit {
   error: string | null = null;
 
   constructor() {
-    this.auth.user$.subscribe(user => {
-      if (user) {
-        this.router.navigate(['/dashboard/default']);
-      }
-    });
+
   }
 
   async login() {

@@ -5,10 +5,11 @@ import { Component, output } from '@angular/core';
 
 import { NavLeftComponent } from './nav-left/nav-left.component';
 import { NavRightComponent } from './nav-right/nav-right.component';
+import { Dir } from "@angular/cdk/bidi";
 
 @Component({
   selector: 'app-nav-bar',
-  imports: [NavLeftComponent, NavRightComponent],
+  imports: [NavLeftComponent, NavRightComponent, Dir],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })

@@ -1,4 +1,15 @@
-<ul class="list-unstyled">
+<ul class="list-unstyled d-flex align-items-center justify-content-center">
+  <li class="nav-item">
+  <button
+    class="btn btn-sm lang-btn"
+    [class.active]="currentLang === 'ar'"
+    (click)="toggleLanguage()"
+    type="button"
+  >
+    <i class="bi bi-globe"></i>
+    {{ currentLang === 'en' ? 'العربية' : 'English' }}
+  </button>
+</li>
   <li class="pc-h-item">
     <a href="https://github.com/cloudcode-sa/Logistices_system" target="_blank" class="pc-head-link me-0 bg-gray-200">
       <i antIcon type="github" theme="outline"></i>

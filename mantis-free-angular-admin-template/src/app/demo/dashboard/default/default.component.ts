@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Shipment } from 'src/app/inerface/shipment';
 import { ShipmentService } from 'src/app/service/shipment-service';
 import { supabase } from 'src/app/supabase.config';
+import { LanguageService } from 'src/app/service/language-service';
 
 @Component({
   selector: 'app-default',
@@ -17,6 +18,14 @@ import { supabase } from 'src/app/supabase.config';
   styleUrls: ['./default.component.scss']
 })
 export class DefaultComponent implements OnInit, OnDestroy {
+   languageService = inject(LanguageService);
+     toggleLanguage() {
+        this.languageService.toggleLanguage();
+      }
+    
+      get currentLang() {
+        return this.languageService.currentLang();
+      }
   currentStep = 1;
 
 nextStep() {
@@ -193,8 +202,9 @@ deleteShipment(shipment: Shipment) {
   this.addSuccess = null;
 
   const s = this.shipmentSvc.deleteShipment(shipment.id).subscribe({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: (deleted) => {
-      // إزالة من المصفوفة recentOrder
+
       this.recentOrder = this.recentOrder.filter(s => s.id !== shipment.id);
       this.addSuccess = `تم حذف الشحنة (${shipment.shipment_number || shipment.id})`;
       this.deletingId = null;

@@ -34,6 +34,15 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'dashboard',
         breadcrumbs: false
       },
+      {
+        id: 'ShipmentDetails',
+        title: 'ShipmentDetails',
+        type: 'item',
+        classes: 'nav-item',
+        url: 'dashboard/ShipmentDetails',
+        icon: 'dashboard',
+        breadcrumbs: false
+      },
     
     ]
   },

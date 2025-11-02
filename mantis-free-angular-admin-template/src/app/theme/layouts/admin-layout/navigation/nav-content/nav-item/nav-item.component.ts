@@ -7,10 +7,11 @@ import { RouterModule } from '@angular/router';
 import { NavigationItem } from '../../navigation';
 
 import { IconDirective } from '@ant-design/icons-angular';
+import { Dir } from "@angular/cdk/bidi";
 
 @Component({
   selector: 'app-nav-item',
-  imports: [CommonModule, IconDirective, RouterModule],
+  imports: [CommonModule, IconDirective, RouterModule, Dir],
   templateUrl: './nav-item.component.html',
   styleUrls: ['./nav-item.component.scss']
 })
