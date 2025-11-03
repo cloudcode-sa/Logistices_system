@@ -367,10 +367,47 @@ modalSaving = false;
 
 // خيارات الحالات (غير الليبل لو عايز عربي/إنجليزي مختلف)
 statusOptions = [
-  { key: 'pending', label: 'Pending' },
-  { key: 'shipped', label: 'Shipped' },
-  { key: 'received_in_china', label: 'Received in China' }
+  { key: 'pending' },
+  { key: 'shipped' },
+  { key: 'in_transit' },        // الشحنة في البحر او في الجو (حسب النوع)
+  { key: 'arrived_at_port' },   // وصلت للميناء
+  { key: 'received_in_china' },
+  { key: 'delivered' }          // تم تسليم الشحنة للعميل
 ];
+// استبدل دالتك الحالية بـ هذي
+getStatusLabel(status: string | null | undefined, shipment?: Partial<Shipment>): string {
+  const lang = this.currentLang;
+  // احصل على النوع من shipment إن موجود، وإلا من newShipment، وإلا 'sea'
+  const rawType = (shipment?.shipment_type ?? this.newShipment?.shipment_type ?? 'sea');
+  const type = String(rawType).trim().toLowerCase();
+
+  switch (status) {
+    case 'pending':
+      return lang === 'ar' ? 'قيد الانتظار' : 'Pending';
+
+    case 'shipped':
+      return lang === 'ar' ? 'تم الشحن' : 'Shipped';
+
+    case 'in_transit':
+      if (lang === 'ar') {
+        return type === 'air' ? 'في الهواء' : 'في البحر';
+      } else {
+        return type === 'air' ? 'In Transit (Air)' : 'In Transit (Sea)';
+      }
+
+    case 'arrived_at_port':
+      return lang === 'ar' ? 'وصلت الشحنة للميناء' : 'Arrived at Port';
+
+    case 'received_in_china':
+      return lang === 'ar' ? 'تم الاستلام في الصين' : 'Received in China';
+
+    case 'delivered':
+      return lang === 'ar' ? 'تم تسليم الشحنة للعميل' : 'Delivered to Customer';
+
+    default:
+      return status ? String(status) : (lang === 'ar' ? '-' : '-');
+  }
+}
 
 // فتح المودال - نعمل shallow copy لو حابب
 openStatusModal(shipment: Shipment) {

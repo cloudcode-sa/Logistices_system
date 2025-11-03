@@ -336,3 +336,20 @@
     }
   }
 }
+.pc-sidebar {
+  position: fixed;
+  left: 0;
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+
+  &.navbar-collapsed {
+    transform: translateX(-100%);
+  }
+}
+
+.pc-container {
+  transition: transform 0.3s ease-in-out;
+  &.shifted {
+    transform: translateX(260px); // بس لو Desktop LTR
+  }
+}

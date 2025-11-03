@@ -1,19 +1,21 @@
 <!-- Wrapper: يغيّر الاتجاه تلقائياً حسب اللغة -->
 <div class="shipments-table-wrap" [attr.dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
 
-
-
   <!-- Table -->
   <table #shipmentsTable class="table table-hover mb-0 align-middle responsive-table">
     <thead>
-      <tr>
+      <tr class="bg-danger">
         <th>{{ currentLang === 'ar' ? 'رقم الشحنة' : 'Tracking Number' }}</th>
         <th>{{ currentLang === 'ar' ? 'نوع الشحنة' : 'Shipment Type' }}</th>
         <th>{{ currentLang === 'ar' ? 'حالة الشحنة' : 'Shipment Status' }}</th>
         <th>{{ currentLang === 'ar' ? 'التاريخ' : 'Date' }}</th>
-        <th class="text-end">{{ currentLang === 'ar' ? 'الحجم (CBM)' : 'CBM (Sea)' }}</th>
-        <th class="text-end">{{ currentLang === 'ar' ? 'الوزن (كجم)' : 'Weight (Air)' }}</th>
-        <th class="text-end">{{ currentLang === 'ar' ? 'تكلفة الشحن' : 'Shipping Cost' }}</th>
+        <th class="">{{ currentLang === 'ar' ? 'الحجم (CBM)' : 'CBM (Sea)' }}</th>
+
+        <!-- NEW: Total Cartons -->
+        <th class="">{{ currentLang === 'ar' ? 'إجمالي الكراتين' : 'Total Cartons' }}</th>
+
+        <th class="">{{ currentLang === 'ar' ? 'الوزن (كجم)' : 'Weight (Air)' }}</th>
+        <th class="">{{ currentLang === 'ar' ? 'تكلفة الشحن' : 'Shipping Cost' }}</th>
         <th class="text-center">{{ currentLang === 'ar' ? 'الإجراءات' : 'Actions' }}</th>
       </tr>
     </thead>
@@ -27,7 +29,7 @@
             </a>
           </td>
 
-          <!-- Shipment Type with safe Arabic translation (no nested ternary) -->
+          <!-- Shipment Type with safe Arabic translation -->
           <td class="text-capitalize">
             <i class="bi me-1"
                [ngClass]="{
@@ -49,46 +51,77 @@
             </ng-container>
           </td>
 
-          <!-- Shipment Status (badge) with safe Arabic translation -->
-          <td class="status-td">
-            <div class="d-flex align-items-center gap-2">
-              <span class="badge px-3 py-2"
-                    [ngClass]="{
-                      'bg-warning text-dark': shipment.shipment_status === 'pending',
-                      'bg-info text-dark': shipment.shipment_status === 'shipped',
-                      'bg-succes text-dark': shipment.shipment_status === 'received_in_china'
-                    }">
-                <!-- Arabic branch -->
-                <ng-container *ngIf="currentLang === 'ar'">
-                  <ng-container *ngIf="shipment.shipment_status === 'pending'">قيد الانتظار</ng-container>
-                  <ng-container *ngIf="shipment.shipment_status === 'shipped'">تم الشحن</ng-container>
-                  <ng-container *ngIf="shipment.shipment_status === 'received_in_china'">تم الاستلام في الصين</ng-container>
-                  <ng-container *ngIf="!shipment.shipment_status">-</ng-container>
-                  <ng-container *ngIf="shipment.shipment_status && shipment.shipment_status !== 'pending' && shipment.shipment_status !== 'shipped' && shipment.shipment_status !== 'received_in_china'">
-                    {{ shipment.shipment_status }}
-                  </ng-container>
-                </ng-container>
+          <!-- Shipment Status (badge) -->
+<!-- status cell (داخل حلقة recentOrder) -->
+<td class="status-td position-relative d-flex justify-content-center align-items-center">
+  <div class="d-flex align-items-center gap-2">
+    <!-- badge current status -->
+    <span class="badge px-3 py-2" [ngClass]="getStatusBadgeClasses(shipment.shipment_status)">
+      {{ getStatusLabel(shipment.shipment_status, shipment) }}
+    </span>
 
-                <!-- English (default) branch -->
-                <ng-container *ngIf="currentLang !== 'ar'">
-                  {{ shipment.shipment_status ? (shipment.shipment_status.replaceAll ? shipment.shipment_status.replaceAll('_', ' ') : (shipment.shipment_status )) : '-' }}
-                </ng-container>
-              </span>
+    <!-- Bootstrap dropdown (toggle) -->
+    <div class="dropdown" [class.show]="inlineDropdownOpenId === shipment.id">
+      <button
+        class="btn btn-sm btn-outline-secondary dropdown-toggle"
+        type="button"
+        (click)="toggleInlineDropdown(shipment, $event)"
+        [attr.aria-expanded]="inlineDropdownOpenId === shipment.id"
+        [disabled]="updatingStatusId === shipment.id"
+        [attr.title]="currentLang === 'ar' ? 'تعديل الحالة' : 'Edit status'">
+        <i class="fa-solid fa-pen-to-square"></i>
+      </button>
 
-              <button type="button"
-                      class="btn btn-sm btn-outline-secondary"
-                      (click)="openStatusModal(shipment); $event.stopPropagation()"
-                      [disabled]="updatingStatusId === shipment.id"
-                      [attr.title]="currentLang === 'ar' ? 'تعديل الحالة' : 'Edit status'">
-                <ng-container *ngIf="updatingStatusId !== shipment.id">
-                  <i class="fa-solid fa-pen-to-square"></i>
-                </ng-container>
-                <ng-container *ngIf="updatingStatusId === shipment.id">
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                </ng-container>
-              </button>
-            </div>
-          </td>
+      <!-- dropdown menu -->
+      <ul class="dropdown-menu shadow-sm p-2"
+          [class.show]="inlineDropdownOpenId === shipment.id"
+          [attr.aria-labelledby]="'statusDropdownBtn_' + shipment.id">
+
+        <li *ngFor="let s of statusOptions">
+          <button
+            class="dropdown-item d-flex justify-content-between align-items-center"
+            type="button"
+            (click)="selectInlineStatus(shipment, s.key)"
+            [class.active]="shipment.shipment_status === s.key">
+            <span>{{ getStatusLabel(s.key, shipment) }}</span>
+            <i *ngIf="shipment.shipment_status === s.key" class="fa-solid fa-check text-success"></i>
+          </button>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="px-2 d-flex gap-2 justify-content-end">
+          <button class="btn btn-sm btn-secondary" type="button" (click)="closeInlineDropdown()">
+            {{ currentLang === 'ar' ? 'إلغاء' : 'Cancel' }}
+          </button>
+
+          <button class="btn btn-sm btn-primary"
+                  type="button"
+                  (click)="confirmInlineStatusUpdate(shipment)"
+                  [disabled]="!selectedInlineStatus || selectedInlineStatus === shipment.shipment_status || updatingStatusId === shipment.id">
+            <ng-container *ngIf="updatingStatusId !== shipment.id">
+              {{ currentLang === 'ar' ? 'حفظ' : 'Save' }}
+            </ng-container>
+            <ng-container *ngIf="updatingStatusId === shipment.id">
+              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              {{ currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...' }}
+            </ng-container>
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- optional: show inline messages -->
+  <div *ngIf="inlineError && inlineForId === shipment.id" class="mt-2">
+    <div class="alert alert-danger py-1 mb-0">{{ inlineError }}</div>
+  </div>
+  <div *ngIf="inlineSuccess && inlineForId === shipment.id" class="mt-2">
+    <div class="alert alert-success py-1 mb-0">{{ inlineSuccess }}</div>
+  </div>
+</td>
+
 
           <td>
             <span class="text-muted">
@@ -100,21 +133,25 @@
             </span>
           </td>
 
-          <td class="text-end">
+          <td class="">
             <span *ngIf="shipment.shipment_type === 'sea'; else noSeaData">
               {{ shipment.total_cbm ? (shipment.total_cbm + ' cbm') : '-' }}
             </span>
             <ng-template #noSeaData> - </ng-template>
           </td>
 
-          <td class="text-end">
+          <!-- TOTAL CARTONS: يظهر دائماً سواء sea أو air -->
+         <td class="">
+  {{ shipment.total_cartons != null ? (shipment.total_cartons | number) : '-' }}
+</td>
+          <td class="">
             <span *ngIf="shipment.shipment_type === 'air'; else noAirData">
               {{ shipment.total_weight ? (shipment.total_weight + ' kg') : '-' }}
             </span>
             <ng-template #noAirData> - </ng-template>
           </td>
 
-          <td class="text-end">
+          <td class="">
             {{ formatMoney(shipment.total_cost) }}
           </td>
 
@@ -153,13 +190,20 @@
         </tr>
       } @empty {
         <tr>
-          <td colspan="8" class="text-center text-muted py-3">
+          <!-- colspan updated to 9 -->
+          <td colspan="9" class="text-center text-muted py-3">
             {{ currentLang === 'ar' ? 'لا توجد شحنات.' : 'No shipments found.' }}
           </td>
         </tr>
       }
     </tbody>
   </table>
+
+  <!-- Edit Modal (يبقى كما في كودك مع الحقول الخاصة بالـ total_cartons موجودة) -->
+  <!-- ... مودال التعديل و status modal كما في كودك الحالي ... -->
+
+</div>
+
 
   <!-- Edit Modal -->
   <div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEdit()"></div>
@@ -274,62 +318,4 @@
   </div>
 
   <!-- Status Modal -->
-  <div class="modal-backdrop" *ngIf="statusModalVisible" (click)="closeStatusModal()"></div>
-
-  <div class="custom-modal" *ngIf="statusModalVisible" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="modal-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{ currentLang === 'ar' ? 'تعديل حالة الشحنة' : 'Edit Shipment Status' }}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeStatusModal()"></button>
-      </div>
-
-      <form (ngSubmit)="confirmStatusUpdate()" #statusForm="ngForm" novalidate>
-        <div class="modal-body">
-          <p class="mb-2">
-            {{ currentLang === 'ar' ? 'الشحنة' : 'Shipment' }}:
-            <strong>{{ modalShipment?.shipment_number || modalShipment?.id }}</strong>
-          </p>
-
-          <div class="list-group">
-            <label class="list-group-item">
-              <input type="radio" name="statusOption" value="pending" [(ngModel)]="modalSelectedStatus" [disabled]="modalSaving" />
-              <span class="ms-2">{{ currentLang === 'ar' ? 'قيد الانتظار' : 'Pending' }}</span>
-              <small class="text-muted ms-2" *ngIf="modalShipment?.shipment_status === 'pending'"> ({{ currentLang === 'ar' ? 'الحالي' : 'current' }})</small>
-            </label>
-
-            <label class="list-group-item">
-              <input type="radio" name="statusOption" value="shipped" [(ngModel)]="modalSelectedStatus" [disabled]="modalSaving" />
-              <span class="ms-2">{{ currentLang === 'ar' ? 'تم الشحن' : 'Shipped' }}</span>
-              <small class="text-muted ms-2" *ngIf="modalShipment?.shipment_status === 'shipped'"> ({{ currentLang === 'ar' ? 'الحالي' : 'current' }})</small>
-            </label>
-
-            <label class="list-group-item">
-              <input type="radio" name="statusOption" value="received_in_china" [(ngModel)]="modalSelectedStatus" [disabled]="modalSaving" />
-              <span class="ms-2">{{ currentLang === 'ar' ? 'تم الاستلام في الصين' : 'Received in China' }}</span>
-              <small class="text-muted ms-2" *ngIf="modalShipment?.shipment_status === 'received_in_china'"> ({{ currentLang === 'ar' ? 'الحالي' : 'current' }})</small>
-            </label>
-          </div>
-
-          <div *ngIf="addError" class="alert alert-danger mt-2">{{ addError }}</div>
-          <div *ngIf="addSuccess" class="alert alert-success mt-2">{{ addSuccess }}</div>
-        </div>
-
-        <div class="modal-footer d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-secondary" (click)="closeStatusModal()" [disabled]="modalSaving">
-            {{ currentLang === 'ar' ? 'إلغاء' : 'Cancel' }}
-          </button>
-
-          <button type="submit" class="btn btn-primary"
-                  [disabled]="modalSaving || !modalSelectedStatus || modalSelectedStatus === modalShipment?.shipment_status">
-            <ng-container *ngIf="!modalSaving">{{ currentLang === 'ar' ? 'حفظ التعديل' : 'Save changes' }}</ng-container>
-            <ng-container *ngIf="modalSaving">
-              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-              {{ currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...' }}
-            </ng-container>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-</div>
+ 

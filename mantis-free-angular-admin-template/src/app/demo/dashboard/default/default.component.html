@@ -45,20 +45,24 @@
           </div>
 
           <!-- Shipment Status -->
-          <div class="col-md-6">
-            <label class="form-label fw-medium">
-              {{ currentLang === 'ar' ? 'حالة الشحنة' : 'Shipment Status' }}
-            </label>
-            <select
-              class="form-select"
-              name="shipment_status"
-              [(ngModel)]="newShipment.shipment_status"
-              required>
-              <option value="pending">{{ currentLang === 'ar' ? 'قيد الانتظار' : 'Pending' }}</option>
-              <option value="shipped">{{ currentLang === 'ar' ? 'تم الشحن' : 'Shipped' }}</option>
-              <option value="received_in_china">{{ currentLang === 'ar' ? 'تم الاستلام في الصين' : 'Received in China' }}</option>
-            </select>
-          </div>
+          <!-- Shipment Status -->
+<div class="col-md-6">
+  <label class="form-label fw-medium">
+    {{ currentLang === 'ar' ? 'حالة الشحنة' : 'Shipment Status' }}
+  </label>
+  <select
+    class="form-select"
+    name="shipment_status"
+    [(ngModel)]="newShipment.shipment_status"
+    required>
+    <option value="" disabled>
+      {{ currentLang === 'ar' ? 'اختر الحالة' : 'Select status' }}
+    </option>
+    <option *ngFor="let s of statusOptions" [value]="s.key">
+      {{ getStatusLabel(s.key, newShipment) }}
+    </option>
+  </select>
+</div>
 
           <!-- Expected Arrival -->
           <div class="col-md-6">
@@ -73,7 +77,7 @@
           </div>
 
           <!-- Fields visible only for SEA -->
-          <div *ngIf="newShipment.shipment_type === 'sea'" class="col-md-6">
+          <div  class="col-md-6">
             <label class="form-label fw-medium">
               {{ currentLang === 'ar' ? 'إجمالي الكراتين' : 'Total Cartons' }}
             </label>

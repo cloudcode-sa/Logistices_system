@@ -1,216 +1,169 @@
-/* ================= Responsive table -> stacked cards (for .responsive-table) ================= */
+/* جدول شحنات فاخر */
+.shipments-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  padding: 1rem;
 
-/* Variables */
-:root{
-  --bg-surface: #f6f8fb;
-  --card-bg: linear-gradient(180deg,#ffffff,#fbfbff);
-  --muted: #6b7280;
-  --accent: #2563eb;
-  --danger: #dc2626;
-  --success: #16a34a;
-  --shadow-lg: 0 20px 50px rgba(2,6,23,0.12);
-  --shadow-sm: 0 6px 18px rgba(2,6,23,0.06);
-  --radius: 12px;
-  --transition-fast: 180ms cubic-bezier(.2,.9,.3,1);
-}
+  table {
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    thead tr {
+      background: linear-gradient(90deg, #0056b3, #00aaff);
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    tbody tr {
+      transition: all 0.25s ease;
+      &:hover { background-color: rgba(0, 170, 255, 0.08); }
+    }
+    th, td { padding: 0.75rem 1rem; text-align: center; }
 
-/* Base table look (desktop) */
-.responsive-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.responsive-table thead {
-  background: linear-gradient(90deg, rgba(37,99,235,0.06), rgba(14,165,164,0.02));
-}
-.responsive-table thead th {
-  padding: 14px 16px;
-  font-weight: 700;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  color: rgba(11,18,32,0.9);
-  border-bottom: none;
-}
-
-/* body rows */
-.responsive-table tbody tr {
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
-  cursor: default;
-}
-.responsive-table tbody tr:not(:last-child) td { border-bottom: 1px solid rgba(11,18,32,0.04); }
-.responsive-table tbody td {
-  padding: 12px 16px;
-  vertical-align: middle;
-  font-size: 0.95rem;
-  color: #071133;
-}
-
-/* badges */
-.status-td .badge {
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-weight: 700;
-  font-size: .85rem;
-  box-shadow: var(--shadow-sm);
-}
-.status-td .bg-warning.text-dark { background: linear-gradient(180deg,#fff7ed,#fff4e6); color:#92400e; }
-.status-td .bg-info.text-dark { background: linear-gradient(180deg,#eef2ff,#eef8ff); color:#0f172a; }
-.status-td .bg-success.text-dark { background: linear-gradient(180deg,#ecfdf5,#f0fdf4); color:#065f46; }
-
-/* Buttons small style */
-.responsive-table .btn { border-radius: 8px; padding: 6px 10px; font-weight:700; display:inline-flex; gap:.4rem; }
-.btn-danger { background: linear-gradient(180deg,#ff6b6b,#e02424); color:#fff; border: none; }
-.btn-secondary { background: linear-gradient(180deg,#f3f4f6,#eef2ff); color:#071133; border: none; }
-
-/* ---------------- Responsive behavior: stack into cards ---------------- */
-@media (max-width: 900px) {
-  /* turn table into blocks */
-  .responsive-table,
-  .responsive-table thead,
-  .responsive-table tbody,
-  .responsive-table th,
-  .responsive-table td,
-  .responsive-table tr {
-    display: block;
-  }
-
-  /* hide original header */
-  .responsive-table thead { display: none; }
-
-  /* each row becomes a card */
-  .responsive-table tbody tr {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    background: linear-gradient(180deg,#fff,#fbfbff);
-    margin: 12px 0;
-    padding: 12px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.06);
-    border: 1px solid rgba(11,18,32,0.04);
-  }
-
-  /* each cell becomes label + value */
-  .responsive-table tbody td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 6px;
-    border: none;
-    font-size: 0.95rem;
-  }
-
-  /* show label via nth-child mapping (edit these texts if you change columns) */
-  .responsive-table tbody td:nth-child(1)::before { content: "Tracking Number"; }
-  .responsive-table tbody td:nth-child(2)::before { content: "Shipment Type"; }
-  .responsive-table tbody td:nth-child(3)::before { content: "Shipment Status"; }
-  .responsive-table tbody td:nth-child(4)::before { content: "Date"; }
-  .responsive-table tbody td:nth-child(5)::before { content: "CBM (Sea)"; }
-  .responsive-table tbody td:nth-child(6)::before { content: "Weight (Air)"; }
-  .responsive-table tbody td:nth-child(7)::before { content: "Shipping Cost"; }
-  .responsive-table tbody td:nth-child(8)::before { content: "Actions"; }
-
-  .responsive-table tbody td::before {
-    font-weight: 700;
-    color: rgba(11,18,32,0.75);
-    margin-right: 12px;
-    white-space: nowrap;
-    font-size: 0.86rem;
-    opacity: 0.95;
-    flex: 0 0 auto;
-  }
-
-  /* value area */
-  .responsive-table tbody td > * {
-    flex: 1 1 auto;
-    text-align: right;
-    color: #071133;
-  }
-
-  /* actions: allow wrap and make buttons comfortable */
-  .responsive-table tbody td.text-center,
-  .responsive-table tbody td .d-flex,
-  .responsive-table tbody td .btn {
-    display: inline-flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .responsive-table tbody td .btn { min-width: 100px; padding: 8px 10px; }
-
-  /* tweak for very small screens */
-  @media (max-width: 420px) {
-    .responsive-table tbody td::before { font-size: 0.82rem; margin-right: 8px; }
-    .responsive-table tbody td { font-size: 0.9rem; padding: 8px 4px; }
-    .responsive-table tbody td .btn { min-width: 86px; padding: 7px 9px; font-size: .86rem; }
+    .status-td .badge {
+      font-weight: 500;
+      font-size: 0.85rem;
+      border-radius: 12px;
+      padding: 0.4rem 0.8rem;
+      color: #fff;
+      &.pending { background-color: #ff9800; }      /* برتقالي */
+      &.shipped { background-color: #4caf50; }      /* أخضر */
+      &.received_in_china { background-color: #2196f3; } /* أزرق */
+    }
   }
 }
+/* تجعل dropdown يظهر فوق كل شيء */
+.shipments-table-wrap .dropdown-menu {
+  position: fixed !important;  /* يظهر فوق كل شيء، خارج الجدول */
+  top: auto !important;        /* نلغي أي top افتراضي */
+  left: auto !important;
+  transform: none !important;  
+  z-index: 1050;               /* فوق أي عنصر */
+  min-width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  animation: dropdownFade 0.15s ease;
+}
 
-/* ---------------- Modal styles (custom-modal & modal-card) ---------------- */
+/* تحريك Fade-in بسيط */
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* الـ backdrop */
 .modal-backdrop {
   position: fixed;
-  inset: 0;
-  background: rgba(6,8,15,0.5);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
   z-index: 1040;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease forwards;
 }
 
+/* Modal container */
 .custom-modal {
   position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1050;
-  animation: modal-in .22s cubic-bezier(.2,.9,.3,1);
+  width: 95%;
+  max-width: 700px;
+  animation: scaleIn 0.25s ease forwards;
 }
 
-.modal-card {
-  width: 760px;
-  max-width: 100%;
-  border-radius: 14px;
-  background: linear-gradient(180deg,#ffffff,#fbfbff);
-  box-shadow: 0 30px 80px rgba(2,6,23,0.16);
-  border: 1px solid rgba(10,15,30,0.04);
+/* Card inside modal */
+.custom-modal .modal-card {
+  background: #fff;
+  border-radius: 16px;
   overflow: hidden;
-  transform-origin: center;
-}
-
-.modal-header {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid rgba(11,18,32,0.04);
-  background: linear-gradient(90deg, rgba(37,99,235,0.02), rgba(14,165,164,0.01));
+  flex-direction: column;
 }
-.modal-header h5 { margin: 0; font-weight: 800; font-size: 1.05rem; color: #071133; }
-.modal-body { padding: 16px 18px; max-height: 64vh; overflow-y: auto; }
-.modal-footer { padding: 12px 18px; border-top: 1px solid rgba(11,18,32,0.03); display:flex; justify-content:flex-end; gap:10px; background: rgba(250,250,255,0.6); }
 
-.btn-close {
-  width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; display:inline-flex; align-items:center; justify-content:center;
+/* Header */
+.custom-modal .modal-header {
+  background: linear-gradient(90deg, #0056b3, #00aaff);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+
+  .btn-close {
+    filter: brightness(0) invert(1);
+    font-size: 1.2rem;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    &:hover { opacity: 1; transform: scale(1.1); }
+  }
 }
-.btn-close:hover { background: rgba(2,6,23,0.04); transform: translateY(-3px); cursor: pointer; }
 
-.modal-body .form-control, .modal-body .form-select {
-  border-radius: 10px; border: 1px solid rgba(2,6,23,0.06); padding: 10px 12px; font-size: .95rem;
+/* Modal Body */
+.custom-modal .modal-body {
+  padding: 1.5rem;
+  background: #f9faff;
 }
-.alert { border-radius: 10px; padding: 10px 12px; font-weight: 700; }
-.alert-danger { background: linear-gradient(180deg,#fff5f5,#fff0f0); color: var(--danger); border: none; }
-.alert-success { background: linear-gradient(180deg,#f0fdf4,#ecfdf5); color: var(--success); border: none; }
 
-@keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.custom-modal .modal-body .form-label {
+  font-weight: 500;
+  color: #333;
+}
 
-/* Accessibility focus */
-button:focus, a:focus, input:focus, select:focus { outline: 3px solid rgba(37,99,235,0.12); outline-offset: 2px; }
+.custom-modal .modal-body input,
+.custom-modal .modal-body select {
+  border-radius: 8px;
+  border: 1px solid #cfd3d9;
+  padding: 0.55rem 0.75rem;
+  transition: all 0.2s ease;
+  &:focus {
+    border-color: #00aaff;
+    box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);
+    outline: none;
+  }
+}
 
-/* ===== end of file ===== */
+/* Alerts */
+.custom-modal .alert {
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.custom-modal .modal-footer {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.custom-modal .btn-primary {
+  background: linear-gradient(90deg, #0056b3, #00aaff);
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  &:hover {
+    background: linear-gradient(90deg, #004494, #0099dd);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
