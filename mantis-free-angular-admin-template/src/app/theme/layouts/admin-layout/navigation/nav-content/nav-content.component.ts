@@ -1,5 +1,4 @@
-// Angular import
-import { Component, OnInit, inject, output } from '@angular/core';
+import { Component, OnInit, inject, Output, EventEmitter, computed } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -23,11 +22,14 @@ import {
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { Dir } from "@angular/cdk/bidi";
+
+// translation service
+import { LanguageService } from 'src/app/service/language-service';
 
 @Component({
   selector: 'app-nav-content',
-  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule, Dir],
+  standalone: true,
+  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule],
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss']
 })
@@ -35,20 +37,22 @@ export class NavContentComponent implements OnInit {
   private location = inject(Location);
   private locationStrategy = inject(LocationStrategy);
   private iconService = inject(IconService);
+  private languageService = inject(LanguageService);
 
-  // public props
-  NavCollapsedMob = output();
-
-  navigations: NavigationItem[];
+  @Output() NavCollapsedMob = new EventEmitter<void>();
 
   // version
   title = 'Demo application for version numbering';
   currentApplicationVersion = environment.appVersion;
 
-  navigation = NavigationItems;
+  // window width
   windowWidth = window.innerWidth;
 
-  // Constructor
+  // computed navigation: يبني نسخة مترجمة من NavigationItems
+  navigation = computed<NavigationItem[]>(() => {
+    return NavigationItems.map(item => this.translateItem(item));
+  });
+
   constructor() {
     this.iconService.addIcon(
       ...[
@@ -63,14 +67,23 @@ export class NavContentComponent implements OnInit {
         QuestionOutline
       ]
     );
-    this.navigations = NavigationItems;
   }
 
-  // Life cycle events
   ngOnInit() {
-    if (this.windowWidth  -1025) {
-      (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+    // تصحيح شرط النافذة
+    if (this.windowWidth < 1025) {
+      const navEl = document.querySelector('.coded-navbar') as HTMLDivElement | null;
+      if (navEl) {
+        navEl.classList.add('menupos-static');
+      }
     }
+  }
+
+  // بناء كائن جديد مع ترجمة العنوان (لا نغيّر المصدر الأصلي)
+  private translateItem(item: NavigationItem): NavigationItem {
+    const title = item.translate ? this.languageService.translate(item.translate) : (item.title ?? item.id);
+    const children = item.children ? item.children.map(c => this.translateItem(c)) : undefined;
+    return { ...item, title, children };
   }
 
   fireOutClick() {
@@ -99,8 +112,19 @@ export class NavContentComponent implements OnInit {
   }
 
   navMob() {
-    if (this.windowWidth < 1025 && document.querySelector('app-navigation.coded-navbar').classList.contains('mob-open')) {
-      this.NavCollapsedMob.emit();
+    if (this.windowWidth < 1025) {
+      const navComp = document.querySelector('app-navigation.coded-navbar');
+      if (navComp?.classList.contains('mob-open')) {
+        this.NavCollapsedMob.emit();
+      }
+    }
+  }
+
+  // helper: إغلاق الريست (إن احتجت استعمالها)
+  closeOtherMenu(event?: Event) {
+    // استخدم حسب حاجتك
+    if (event) {
+      event.stopPropagation();
     }
   }
 }

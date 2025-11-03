@@ -208,33 +208,102 @@ export class ShipmentDetails {
   // -----------------------
   // inline Bootstrap dropdown handlers
   // -----------------------
-  toggleInlineDropdown(shipment: Shipment, event?: MouseEvent) {
-    event?.stopPropagation();
-    if (this.inlineDropdownOpenId === shipment.id) {
-      this.closeInlineDropdown();
-      return;
-    }
-    this.inlineDropdownOpenId = shipment.id ?? null;
-    this.selectedInlineStatus = shipment.shipment_status ?? null;
-    this.inlineError = null;
-    this.inlineSuccess = null;
-    this.inlineForId = shipment.id ?? null;
+dropdownBgColor: string | null = null;
+dropdownMenuStyles: { [k: string]: string } = {}; // ستُمرّر إلى ngStyle
+menuWidth = 280; // تقريبًا نفس min-width في CSS — عدّل لو غيرته
 
-    // keep modalShipment as partial copy
-    this.modalShipment = { ...shipment };
-    this.modalSelectedStatus = shipment.shipment_status ?? null;
+toggleInlineDropdown(shipment: Shipment, event?: MouseEvent) {
+  event?.stopPropagation();
+
+  // لو نفس الـ dropdown مفتوح -> قفله
+  if (this.inlineDropdownOpenId === shipment.id) {
+    this.closeInlineDropdown();
+    return;
   }
 
-  closeInlineDropdown() {
-    this.inlineDropdownOpenId = null;
-    this.selectedInlineStatus = null;
-    this.inlineError = null;
-    this.inlineSuccess = null;
-    this.inlineForId = null;
-    this.modalShipment = null;
-    this.modalSelectedStatus = null;
-    this.modalSaving = false;
+  // فتح الحالة وتعيين المتغيرات
+  this.inlineDropdownOpenId = shipment.id ?? null;
+  this.selectedInlineStatus = shipment.shipment_status ?? null;
+  this.inlineError = null;
+  this.inlineSuccess = null;
+  this.inlineForId = shipment.id ?? null;
+
+  this.modalShipment = { ...shipment };
+  this.modalSelectedStatus = shipment.shipment_status ?? null;
+
+  // لون التدرج كما سبق (أمثلة رايقة)
+  const bgMap: Record<string, string> = {
+  pending: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',          // ذهبي دافئ
+  shipped: 'linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%)',          // أزرق ناعم
+  in_transit: 'linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%)',       // تركواز رايق
+arrived_at_port: 'linear-gradient(135deg, #4E342E 0%, #795548 100%)',
+
+  received_in_china: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+
+delivered: 'linear-gradient(135deg, #3A3A3A 0%, #121212 100%)',
+     // أخضر لطيف
+};
+
+this.dropdownBgColor = bgMap[shipment.shipment_status ?? ''] ||
+                       'linear-gradient(135deg, #3B82F6 0%, #6366F1 100%)';
+
+
+  // ---- حساب موقع الزر وإعداد الـ styles للدروب ----------
+  // نستخدم event.currentTarget لو متاح، وإلا نحاول إيجاد الهدف العام
+  const btnEl = (event && (event.currentTarget as HTMLElement)) ||
+                (event && (event.target as HTMLElement)) ||
+                null;
+
+  if (!btnEl) {
+    // fallback: محاذاة بسيطة إلى وسط الخلية (يمين)
+    this.dropdownMenuStyles = {
+      position: 'absolute',
+      right: '12px',
+      top: '110%',
+      '--dropdown-bg': this.dropdownBgColor ?? ''
+    };
+    return;
   }
+
+  const rect = btnEl.getBoundingClientRect();
+  const scrollY = window.scrollY || window.pageYOffset;
+  const scrollX = window.scrollX || window.pageXOffset;
+
+  // نحسب المكان المطلوب للـ menu (نضعه أسفل الزر)
+  let left = rect.left + scrollX;                // إحداثي اليسار في نافذة الوثيقة
+  const top = rect.bottom + scrollY + 8;         // 8px مسافة صغيرة أسفل الزر
+
+  // منع خروج الـ menu عن يمين الشاشة
+  const viewportWidth = window.innerWidth;
+  const padding = 12; // مسافة أمان من الحواف
+  if ((left + this.menuWidth + padding) > viewportWidth) {
+    // نزحّه لليمين لو هيخرج
+    left = Math.max(padding, viewportWidth - this.menuWidth - padding);
+  }
+
+  // لو عايز الـ menu يبقى محورياً على الزر، ممكن نزوّد left بمنتصف الزر
+  // لو تحب المحاذاة لليمين تحت الزر غير السطر ده:
+  // left = rect.right - this.menuWidth + scrollX;
+
+  this.dropdownMenuStyles = {
+    position: 'fixed',
+    left: `${Math.round(left)}px`,
+    top: `${Math.round(top)}px`,
+    width: `${this.menuWidth}px`,
+    // تمرير لون التدرج كـ CSS variable
+    '--dropdown-bg': this.dropdownBgColor ?? ''
+  };
+}
+ closeInlineDropdown() {
+  this.inlineDropdownOpenId = null;
+  this.selectedInlineStatus = null;
+  this.inlineError = null;
+  this.inlineSuccess = null;
+  this.inlineForId = null;
+  this.modalShipment = null;
+  this.modalSelectedStatus = null;
+  this.dropdownBgColor = null;
+}
 
   selectInlineStatus(shipment: Shipment, key: string) {
     this.selectedInlineStatus = key;

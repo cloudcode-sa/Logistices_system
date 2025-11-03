@@ -14,14 +14,15 @@ import { LanguageService } from 'src/app/service/language-service';
   styleUrls: ['./auth-login.component.scss']
 })
 export class AuthLoginComponent implements OnInit {
-  languageService = inject(LanguageService);
- toggleLanguage() {
-    this.languageService.toggleLanguage();
-  }
+languageService = inject(LanguageService);
 
-  get currentLang() {
-    return this.languageService.currentLang();
-  }
+toggleLanguage() {
+  this.languageService.toggleLanguage();
+}
+
+get currentLang() {
+  return this.languageService.currentLang();
+}
   ngOnInit(): void {
     // مثال لفحص session / user — Supabase JS v2
 (async () => {

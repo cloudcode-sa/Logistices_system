@@ -88,7 +88,9 @@
     </svg>
   </div>
 </section>
-<div class="shipment-tracker container py-5">
+
+
+<div class="shipment-tracker container py-5" dir="ltr">
   <h2 class="text-center mb-4 fw-bold text-gradient">{{ currentLang === 'en' ? 'Track Your Shipment' : 'تتبع شحنتك' }}</h2>
 
   <!-- Search Box -->
@@ -142,39 +144,25 @@
     </div>
 
     <!-- Progress Section -->
-    <div class="shipment-progress mt-4">
-      <div class="progress-line">
-        <div
-          class="progress-fill"
-          [ngClass]="searchResult.shipment_status"
-          [style.width]="getProgressWidth(searchResult.shipment_status)"
-        ></div>
-      </div>
+    <!-- Progress Section (dynamic based on statusSteps) -->
+<div class="shipment-progress mt-4">
+ <div class="progress-line" role="progressbar" aria-hidden="true">
+  <div class="progress-fill"
+       [style.width]="getProgressWidth(searchResult?.shipment_status)"
+       [ngClass]="searchResult?.shipment_status"></div>
+</div>
 
-      <div class="progress-steps d-flex justify-content-between mt-3">
-        <div class="step" [ngClass]="{ active: searchResult.shipment_status === 'pending' }">
-          <i class="bi bi-hourglass-split"></i>
-          <span>{{ currentLang === 'en' ? 'Pending' : 'قيد الانتظار' }}</span>
-        </div>
-
-        <div class="step" [ngClass]="{
-  active:
-    searchResult.shipment_status === 'shipped' ||
-    searchResult.shipment_status === 'تم الشحن'
-}">
-          <i class="bi bi-truck"></i>
-          <span>{{ currentLang === 'en' ? 'Shipped' : 'تم الشحن' }}</span>
-        </div>
-
-        <div
-          class="step"
-          [ngClass]="{ active: searchResult.shipment_status === 'received_in_china' }"
-        >
-          <i class="bi bi-building"></i>
-          <span>{{ currentLang === 'en' ? 'Received in China' : 'تم الاستلام في الصين' }}</span>
-        </div>
-      </div>
+<div class="progress-steps d-flex justify-content-between mt-3">
+  <div *ngFor="let step of statusSteps" class="step" [class.active]="isStepActive(step.key, searchResult?.shipment_status)">
+    <div class="step-icon">
+      <i [class]="'bi ' + step.icon"></i>
     </div>
+    <small>{{ getStatusLabel(step.key, searchResult) }}</small>
+  </div>
+</div>
+
+</div>
+
   </div>
 
   <!-- No Result -->
@@ -336,29 +324,59 @@
       <p class="lead">{{ t('contact.text') }}</p>
     </div>
 
-    <form (ngSubmit)="submitForm()" class="bg-white p-4 rounded-3 shadow-sm">
+    <form (ngSubmit)="submitForm()" class="bg-white p-4 rounded-3 shadow-sm" #contactFormRef="ngForm">
       <div class="row g-3 mb-3">
         <div class="col-md-6">
           <label class="form-label fw-semibold">{{ t('contact.name') }}</label>
-          <input type="text" [(ngModel)]="contactForm.name" name="name" required class="form-control" [placeholder]="t('contact.name')">
+          <input
+            type="text"
+            [(ngModel)]="contactForm.name"
+            name="name"
+            required
+            class="form-control"
+            [placeholder]="t('contact.name')">
         </div>
+
         <div class="col-md-6">
           <label class="form-label fw-semibold">{{ t('contact.email') }}</label>
-          <input type="email" [(ngModel)]="contactForm.email" name="email" required class="form-control" [placeholder]="t('contact.email')">
+          <input
+            type="email"
+            [(ngModel)]="contactForm.email"
+            name="email"
+            required
+            class="form-control"
+            [placeholder]="t('contact.email')">
         </div>
       </div>
 
       <div class="mb-3">
         <label class="form-label fw-semibold">{{ t('contact.phone') }}</label>
-        <input type="tel" [(ngModel)]="contactForm.phone" name="phone" required class="form-control" [placeholder]="t('contact.phone')">
+        <input
+          type="tel"
+          [(ngModel)]="contactForm.phone"
+          name="phone"
+          class="form-control"
+          [placeholder]="t('contact.phone')">
       </div>
 
       <div class="mb-3">
         <label class="form-label fw-semibold">{{ t('contact.message') }}</label>
-        <textarea [(ngModel)]="contactForm.message" name="message" required rows="5" class="form-control" [placeholder]="t('contact.message')"></textarea>
+        <textarea
+          [(ngModel)]="contactForm.message"
+          name="message"
+          required
+          rows="5"
+          class="form-control"
+          [placeholder]="t('contact.message')"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 py-2">{{ t('contact.submit') }}</button>
+      <button
+        type="submit"
+        class="btn btn-primary w-100 py-2"
+        [disabled]="sending">
+        <span *ngIf="!sending">{{ t('contact.submit') }}</span>
+        <span *ngIf="sending">{{ t('contact.sending') || 'جاري الإرسال...' }}</span>
+      </button>
     </form>
   </div>
 </section>

@@ -494,86 +494,21 @@ section#home svg:hover {
     }
 
     .shipment-progress {
-      margin-top: 20px;
+  --dot-size: 34px;
 
-      .progress-line {
-        position: relative;
-        height: 6px;
-        background: #e9ecef;
-        border-radius: 5px;
-        overflow: hidden;
+  .progress-line { position: relative; height: 6px; background: #e9ecef; border-radius: 5px; overflow: visible; }
 
-        .progress-fill {
-          height: 100%;
-          border-radius: 5px;
-          width: 0;
-          animation: fillProgress 1.2s ease forwards;
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    border-radius: 5px;
+    transition: width 400ms ease;
+  }
+}
 
-          &.pending {
-            background: linear-gradient(90deg, #ffca28, #ffc107);
-          }
-
-          &.shipped {
-            background: linear-gradient(90deg, #17a2b8, #33c2dc);
-          }
-
-          &.received_in_china {
-            background: linear-gradient(90deg, #28a745, #6ddf55);
-          }
-        }
-      }
-
-      .progress-steps {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-
-        .step {
-          text-align: center;
-          color: #adb5bd;
-          transition: all 0.4s ease;
-          opacity: 0;
-          animation: stepFadeIn 0.8s ease forwards;
-
-          i {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 5px;
-            transition: transform 0.3s ease;
-          }
-
-          span {
-            font-size: 0.9rem;
-            font-weight: 600;
-          }
-
-          &.pending.active {
-            color: #ffc107;
-          }
-          &.shipped.active {
-            color: #17a2b8;
-          }
-          &.received_in_china.active {
-            color: #28a745;
-          }
-
-          &.active i {
-            transform: scale(1.2);
-          }
-        }
-
-        // تأخير بسيط في ظهور كل step عشان الإحساس بالترتيب
-        .step:nth-child(1) {
-          animation-delay: 0.3s;
-        }
-        .step:nth-child(2) {
-          animation-delay: 0.6s;
-        }
-        .step:nth-child(3) {
-          animation-delay: 0.9s;
-        }
-      }
-    }
   }
 }
 
@@ -663,5 +598,97 @@ section#home svg:hover {
         0 12px 30px rgba(0, 0, 0, 0.12),
         0 20px 45px rgba(0, 123, 255, 0.18);
     }
+  }
+}
+.shipment-progress {
+  .progress-line { margin-bottom: 6px; }
+
+  .progress-steps {
+    .step { width: auto; flex: 1 1 0; }
+
+    .step .step-icon {
+      transition: transform .18s ease, background .18s ease;
+      i { font-size: 1rem; color: #4a4a4a; }
+    }
+
+    .step.active .step-icon,
+    .step .step-icon.active-icon {
+      transform: translateY(-4px);
+      background: linear-gradient(90deg,#4a90e2,#357ABD);
+      i { color: #fff; }
+    }
+
+    .step small { font-size: 0.75rem; color: #6c757d; }
+  }
+}
+.shipment-progress {
+  --dot-size: 34px;     /* عدّل لو أيقوناتك أكبر/أصغر */
+  --line-offset: 0px;   /* للتعديل الدقيق: جرب -2px أو 2px */
+
+  .progress-line {
+    position: relative;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 999px;
+    overflow: visible;
+  }
+
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    border-radius: 999px;
+    width: 0;
+    transition: width 380ms cubic-bezier(.2,.9,.2,1);
+    z-index: 1;
+    background: linear-gradient(90deg,#4a90e2,#357ABD);
+  }
+
+  .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    position: relative;
+    z-index: 3; /* فوق الـ progress-fill */
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1 1 0;
+      small { margin-top: 6px; font-size: 0.78rem; color: #6c757d; }
+
+      .step-icon {
+        width: var(--dot-size);
+        height: var(--dot-size);
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        transition: transform .18s ease, background .18s ease;
+        margin-bottom: 0;
+      }
+
+      &.active .step-icon {
+        transform: translateY(-4px);
+        background: linear-gradient(90deg,#4a90e2,#357ABD);
+      }
+
+      i { font-size: 1rem; color: #4a4a4a; }
+
+      /* تحكم بالـ alignment لو احتاجت أي خطوة لقبول مسافات أصغر */
+      &:first-child .step-icon { margin-left: 0; }
+      &:last-child .step-icon { margin-right: 0; }
+    }
+  }
+
+  /* responsive tweak */
+  @media (max-width: 480px) {
+    --dot-size: 28px;
   }
 }

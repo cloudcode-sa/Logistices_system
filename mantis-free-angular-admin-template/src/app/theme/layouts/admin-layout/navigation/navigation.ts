@@ -1,11 +1,17 @@
+// src/app/theme/layouts/admin-layout/navigation/navigation.ts
+
+// src/app/theme/layouts/admin-layout/navigation/navigation.ts
 export interface NavigationItem {
   id: string;
-  title: string;
-  type: 'item' | 'collapse' | 'group';
+  title?: string;
   translate?: string;
+  type: 'item' | 'collapse' | 'group';
   icon?: string;
   hidden?: boolean;
   url?: string;
+  link?: string;         // <<< اضف هذا الحقل (اختياري)
+  path?: string;         // <<< اضف هذا الحقل (اختياري)
+  description?: string;  // <<< اضف هذا الحقل (اختياري)
   classes?: string;
   groupClasses?: string;
   exactMatch?: boolean;
@@ -13,21 +19,19 @@ export interface NavigationItem {
   target?: boolean;
   breadcrumbs?: boolean;
   children?: NavigationItem[];
-  link?: string;
-  description?: string;
-  path?: string;
 }
+
 
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
-    title: 'Dashboard',
+    translate: 'menu.dashboard',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
         id: 'default',
-        title: 'Add Shipment',
+        translate: 'menu.addShipment',
         type: 'item',
         classes: 'nav-item',
         url: '/dashboard/default',
@@ -36,27 +40,24 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'ShipmentDetails',
-        title: 'ShipmentDetails',
+        translate: 'menu.shipmentDetails',
         type: 'item',
         classes: 'nav-item',
-        url: 'dashboard/ShipmentDetails',
+        url: '/dashboard/ShipmentDetails',
         icon: 'dashboard',
         breadcrumbs: false
-      },
-    
+      }
     ]
   },
- 
- 
   {
     id: 'other',
-    title: 'Other',
+    translate: 'menu.other',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
         id: 'sample-page',
-        title: 'Sample Page',
+        translate: 'menu.samplePage',
         type: 'item',
         url: '/sample-page',
         classes: 'nav-item',
@@ -64,7 +65,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'document',
-        title: 'Document',
+        translate: 'menu.documentation',
         type: 'item',
         classes: 'nav-item',
         url: 'https://codedthemes.gitbook.io/mantis-angular/',

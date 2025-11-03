@@ -35,25 +35,152 @@
   }
 }
 /* تجعل dropdown يظهر فوق كل شيء */
-.shipments-table-wrap .dropdown-menu {
-  position: fixed !important;  /* يظهر فوق كل شيء، خارج الجدول */
-  top: auto !important;        /* نلغي أي top افتراضي */
-  left: auto !important;
-  transform: none !important;  
-  z-index: 1050;               /* فوق أي عنصر */
-  min-width: 220px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  animation: dropdownFade 0.15s ease;
+.shipments-table-wrap {
+  .dropdown {
+    .dropdown-menu {
+      position: fixed;
+      min-width: 280px;
+      padding: 0.6rem;
+      border-radius: 14px;
+      border: none;
+      overflow: visible;
+      color: #fff;
+      z-index: 3000;
+      background: var(--dropdown-bg, linear-gradient(135deg, #6D28D9 0%, #3B82F6 100%));
+      background-size: 200% 200%;
+      animation: gradientFlow 6s ease infinite;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px) saturate(130%);
+      -webkit-backdrop-filter: blur(8px) saturate(130%);
+      transition: transform 180ms ease, opacity 160ms ease;
+      opacity: 0;
+      transform: translateY(6px) scale(0.97);
+      transform-origin: top left;
+
+      &.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      /* --------------------
+         Dropdown Items
+      -------------------- */
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 0.9rem;
+        border-radius: 10px;
+        font-weight: 500;
+        color: #fff;
+        transition: all 0.25s ease-in-out;
+        border: 1px solid transparent;
+        box-shadow: none;
+        background: transparent;
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.25);
+          box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+          transform: translateY(-1px);
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --------------------
+           Active Item Style
+           (بدون خلفية)
+        -------------------- */
+        &.active {
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.25),
+                      inset 0 0 10px rgba(255, 255, 255, 0.1);
+          background: transparent !important;
+          transform: translateY(-1px) scale(1.01);
+        }
+      }
+    }
+  }
 }
 
-/* تحريك Fade-in بسيط */
-@keyframes dropdownFade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* --------------------
+   Gradient Animation
+-------------------- */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* الـ backdrop */
+.action-buttons {
+  .btn {
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.25s ease-in-out;
+    padding: 6px 14px;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+  }
+
+  .cancel-btn {
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #555;
+
+    &:hover {
+      border-color: #999;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    // Animation sheen (light reflection)
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+      transition: all 0.5s ease-in-out;
+    }
+
+    &:hover::after {
+      left: 100%;
+    }
+  }
+}
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -165,5 +292,4 @@
 
 @keyframes scaleIn {
   from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }}

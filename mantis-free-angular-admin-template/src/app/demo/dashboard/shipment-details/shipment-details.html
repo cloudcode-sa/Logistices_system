@@ -62,20 +62,22 @@
 
     <!-- Bootstrap dropdown (toggle) -->
     <div class="dropdown" [class.show]="inlineDropdownOpenId === shipment.id">
-      <button
-        class="btn btn-sm btn-outline-secondary dropdown-toggle"
-        type="button"
-        (click)="toggleInlineDropdown(shipment, $event)"
-        [attr.aria-expanded]="inlineDropdownOpenId === shipment.id"
-        [disabled]="updatingStatusId === shipment.id"
-        [attr.title]="currentLang === 'ar' ? 'تعديل الحالة' : 'Edit status'">
-        <i class="fa-solid fa-pen-to-square"></i>
-      </button>
+     <button
+  #statusBtn
+  class="btn btn-sm btn-outline-secondary dropdown-toggle"
+  type="button"
+  (click)="toggleInlineDropdown(shipment, $event)"
+  [attr.aria-expanded]="inlineDropdownOpenId === shipment.id"
+  [disabled]="updatingStatusId === shipment.id"
+  [attr.title]="currentLang === 'ar' ? 'تعديل الحالة' : 'Edit status'">
+  <i class="fa-solid fa-pen-to-square"></i>
+</button>
 
       <!-- dropdown menu -->
       <ul class="dropdown-menu shadow-sm p-2"
-          [class.show]="inlineDropdownOpenId === shipment.id"
-          [attr.aria-labelledby]="'statusDropdownBtn_' + shipment.id">
+    [class.show]="inlineDropdownOpenId === shipment.id"
+    [attr.aria-labelledby]="'statusDropdownBtn_' + shipment.id"
+    [ngStyle]="inlineDropdownOpenId === shipment.id ? dropdownMenuStyles : {}">
 
         <li *ngFor="let s of statusOptions">
           <button
@@ -90,24 +92,27 @@
 
         <li><hr class="dropdown-divider"></li>
 
-        <li class="px-2 d-flex gap-2 justify-content-end">
-          <button class="btn btn-sm btn-secondary" type="button" (click)="closeInlineDropdown()">
-            {{ currentLang === 'ar' ? 'إلغاء' : 'Cancel' }}
-          </button>
+      <li class="action-buttons px-2 d-flex gap-2 justify-content-end">
+  <button class="btn cancel-btn text-white" type="button" (click)="closeInlineDropdown()">
+    {{ currentLang === 'ar' ? 'إلغاء' : 'Cancel' }}
+  </button>
 
-          <button class="btn btn-sm btn-primary"
-                  type="button"
-                  (click)="confirmInlineStatusUpdate(shipment)"
-                  [disabled]="!selectedInlineStatus || selectedInlineStatus === shipment.shipment_status || updatingStatusId === shipment.id">
-            <ng-container *ngIf="updatingStatusId !== shipment.id">
-              {{ currentLang === 'ar' ? 'حفظ' : 'Save' }}
-            </ng-container>
-            <ng-container *ngIf="updatingStatusId === shipment.id">
-              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-              {{ currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...' }}
-            </ng-container>
-          </button>
-        </li>
+  <button
+    class="btn save-btn"
+    type="button"
+    (click)="confirmInlineStatusUpdate(shipment)"
+    [disabled]="!selectedInlineStatus || selectedInlineStatus === shipment.shipment_status || updatingStatusId === shipment.id"
+  >
+    <ng-container *ngIf="updatingStatusId !== shipment.id">
+      {{ currentLang === 'ar' ? 'حفظ' : 'Save' }}
+    </ng-container>
+    <ng-container *ngIf="updatingStatusId === shipment.id">
+      <span class="spinner-border spinner-border-sm me-1 text-white" role="status" aria-hidden="true"></span>
+      {{ currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...' }}
+    </ng-container>
+  </button>
+</li>
+
 
       </ul>
     </div>
@@ -141,9 +146,10 @@
           </td>
 
           <!-- TOTAL CARTONS: يظهر دائماً سواء sea أو air -->
-         <td class="">
-  {{ shipment.total_cartons != null ? (shipment.total_cartons | number) : '-' }}
-</td>
+          <td class="">
+            {{ shipment.total_cartons !== null ? (shipment.total_cartons | number) : '-' }}
+          </td>
+
           <td class="">
             <span *ngIf="shipment.shipment_type === 'air'; else noAirData">
               {{ shipment.total_weight ? (shipment.total_weight + ' kg') : '-' }}

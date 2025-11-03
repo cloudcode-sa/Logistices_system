@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 export interface Translation {
   [key: string]: string;
 }
-
+const LANG_STORAGE_KEY = 'app_lang'
 @Injectable({
   providedIn: 'root'
 })
@@ -50,7 +50,12 @@ export class LanguageService {
       'services.customs.desc': 'Expert customs brokerage services ensuring smooth clearance at all major ports worldwide.',
       'services.warehouse.title': 'Warehousing',
       'services.warehouse.desc': 'Secure storage facilities with advanced inventory management systems at strategic locations.',
-      
+      'menu.dashboard': 'Dashboard',
+'menu.addShipment': 'Add Shipment',
+'menu.shipmentDetails': 'Shipment Details',
+'menu.other': 'Other',
+'menu.samplePage': 'Sample Page',
+'menu.documentation': 'Documentation',
       // Network Section
       'network.title': 'Global Network',
       'network.heading': 'Connected Worldwide',
@@ -99,6 +104,12 @@ export class LanguageService {
       'nav.contact': 'اتصل بنا',
       'nav.login': 'تسجيل الدخول',
       'nav.Dashboard': 'لوحة التحكم',
+      'menu.dashboard': 'لوحة التحكم',
+'menu.addShipment': 'إضافة شحنة',
+'menu.shipmentDetails': 'تفاصيل الشحنة',
+'menu.other': 'أخرى',
+'menu.samplePage': 'صفحة تجريبية',
+'menu.documentation': 'التوثيق',
 
       
       // Hero Section
@@ -172,26 +183,55 @@ export class LanguageService {
     }
   };
 
-  constructor() {
-    // Check browser language preference
-    const browserLang = navigator.language.split('-')[0];
-    if (browserLang === 'ar') {
-      this.currentLang.set('ar');
-      document.documentElement.setAttribute('dir', 'rtl');
-      document.documentElement.setAttribute('lang', 'ar');
+   constructor() {
+    // 1) نحاول نقرا اللغة من localStorage أولاً
+    const saved = localStorage.getItem(LANG_STORAGE_KEY) as ('en' | 'ar') | null;
+
+    if (saved === 'ar' || saved === 'en') {
+      this.setLanguage(saved, false); // false => ما نخزنهاش مرة ثانية لأنها بالفعل محفوظة
+    } else {
+      // 2) لو ما فيش حفظ، نستعمل لغة المتصفح كبداية
+      const browserLang = (navigator.language || navigator['userLanguage'] || 'en').split('-')[0];
+      const initial = browserLang === 'ar' ? 'ar' : 'en';
+      this.setLanguage(initial, true); // نخزنها في localStorage
+    }
+
+    // 3) استمع لتغيّرات localStorage من تبويبات تانية (synch)
+    window.addEventListener('storage', (e: StorageEvent) => {
+      if (e.key === LANG_STORAGE_KEY && (e.newValue === 'en' || e.newValue === 'ar')) {
+        this.currentLang.set(e.newValue as 'en' | 'ar');
+        document.documentElement.setAttribute('dir', e.newValue === 'ar' ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('lang', e.newValue === 'ar' ? 'ar' : 'en');
+      }
+    });
+  }
+
+  // دالة مساعدة لتعيين اللغة بشكل مركزي
+  // saveToStorage: لو true -> يخزن القيمة في localStorage
+  setLanguage(lang: 'en' | 'ar', saveToStorage = true) {
+    this.currentLang.set(lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
+
+    if (saveToStorage) {
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, lang);
+      } catch (err) {
+        // في حالات خصوصية أو private mode قد يفشل التخزين — نتجاهل بأمان
+        console.warn('Unable to persist language to localStorage', err);
+      }
     }
   }
 
+  // toggleLanguage تبقي بسيطة وتستعمل setLanguage
   toggleLanguage() {
     const newLang = this.currentLang() === 'en' ? 'ar' : 'en';
-    this.currentLang.set(newLang);
-    
-    // Update HTML attributes
-    document.documentElement.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', newLang);
+    this.setLanguage(newLang, true);
   }
 
+  // ترجمة: استخدم القيمة من ال-signal
   translate(key: string): string {
-    return this.translations[this.currentLang()][key] || key;
+    const lang = this.currentLang();
+    return this.translations[lang]?.[key] ?? key;
   }
 }

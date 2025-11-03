@@ -2,12 +2,12 @@
   <li [ngClass]="item.classes!" [routerLinkActive]="['active']">
     <a [target]="item.target ? '_blank' : '_self'" [routerLink]="[item.url]" (click)="closeOtherMenu($event)">
       @if (item.icon) {
-        <span class="coded-micon">
+        <span class="coded-micon ">
           <i antIcon type="{{ item.icon }}" theme="outline"></i>
         </span>
       }
       @if (item.icon) {
-        <span class="coded-mtext">{{ item.title }}</span>
+        <span class="coded-mtext me-2">{{ item.title }}</span>
       } @else {
         {{ item.title }}
       }
